@@ -1,4 +1,4 @@
-thai-base-vue
+se.vuessr
     // 构建相关
     + build
         - webpack.base.config.js
