@@ -15,6 +15,7 @@
     "ssr:build:server": "cross-env NODE_ENV=production webpack --config build/webpack.server.config.js --progress --hide-modules"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",
     "connect-rid": "0.0.1",
