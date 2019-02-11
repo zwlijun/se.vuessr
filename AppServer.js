@@ -201,7 +201,7 @@ function doRender(req, res){
     res.setHeader("X-Server-Info", serverInfo)
 
     const errorHandler = err => {
-        console.log(err);
+        // console.log(err);
 
         if (err && err.code === 401) {
             return res.redirect('/login');
@@ -215,7 +215,7 @@ function doRender(req, res){
         }
     }
 
-    console.log(req.url, req.get("Host"))
+    // console.log(req.url, req.get("Host"))
     
     const clientInfo = ((req) => {
         let host = req.get("Host");
