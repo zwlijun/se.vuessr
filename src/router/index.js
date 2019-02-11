@@ -1,11 +1,11 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue"
+import Router from "vue-router"
+
+//-------------------------------------------[[
+import hello from "@/components/hello/hello"
+//-------------------------------------------]]
 
 Vue.use(Router)
-
-const HelloWorld = {
-  "template": "<h1>Hello world!</h1>"
-}
 
 export function createRouter () {
   return new Router({
@@ -15,7 +15,7 @@ export function createRouter () {
       {
         "name": "hello",
         "path": "/hello",
-        "component": HelloWorld
+        "component": hello
       }
     ]
   })

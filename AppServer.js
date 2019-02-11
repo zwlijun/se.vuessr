@@ -139,7 +139,11 @@ function createRenderer (bundle, options) {
 }
 
 const serve = (path, cache) => express.static(resolve(path), {
-    maxAge: cache && isProd ? 60 * 60 * 24 * 30 : 0
+    "maxAge": cache && isProd ? "7d" : 0,
+    "etag": true === cache,
+    "setHeaders": (res, path, stat) => {
+        res.setHeader("X-Server-Info", serverInfo)
+    }
 })
 
 expressAppServer.use(compression({ threshold: 0 }))
@@ -147,7 +151,7 @@ expressAppServer.use(compression({ threshold: 0 }))
 expressAppServer.use('/dist', serve('./dist', true))
 expressAppServer.use('/static', serve('./dist/static', true))
 expressAppServer.use('/manifest.json', serve('./dist/vue-ssr-client-manifest.json', true))
-expressAppServer.use('/service-worker.js', serve('./dist/service-worker.js'))
+expressAppServer.use('/service-worker.js', serve('./dist/service-worker.js', true))
 
 /**
  * proxy middleware options
@@ -166,10 +170,7 @@ function doRender(req, res){
     const s = Date.now()
 
     res.setHeader("Content-Type", "text/html")
-
-    if(!isProd){
-        res.setHeader("Server", serverInfo)
-    }
+    res.setHeader("X-Server-Info", serverInfo)
 
     const errorHandler = err => {
         if (err && err.code === 401) {
@@ -185,10 +186,12 @@ function doRender(req, res){
     }
     
     const context = {
-        title: 'VUE SSR Base',
-        url: req.url,
-        cookies: req.cookies
+        "title"   : "VUE SSR Base",
+        "url"     : req.url,
+        "cookies" : req.cookies,
+        "server"  : serverInfo
     }
+
     serverRenderer.renderToStream(context)
         .on('error', errorHandler)
         .on('end', () => {

@@ -12,8 +12,11 @@ export default context => {
         const s = isDev && Date.now()
         const { app, router, store } = createVueApp()
 
-        const { url, cookies } = context
+        const { url, cookies, server } = context
         const { fullPath } = router.resolve(url).route
+
+        //将服务器信息同步到客户端
+        store.state.server = server
 
         // if (cookies) {
         //     store.state.cookies = cookies
