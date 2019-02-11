@@ -11,8 +11,14 @@
  */
 'use strict';
 
-import htmlTitle from "./title";
+import title from "./title";
+import ogp from "./ogp";
+import seo from "./seo";
+import meta from "./meta";
 
 export {
-	htmlTitle as title
+	title,
+	ogp,
+	seo,
+	meta
 };

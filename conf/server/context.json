@@ -1,0 +1,18 @@
+{
+    "title"   : "VUE SSR Base",
+    "client"  : null,
+    "server"  : null,
+    "meta"    : null,
+    "seo"     : {
+        "keywords": "NodeJS,Express,VUE,VUE-SSR,VUEX,VUE-ROUTER",
+        "description": "VUE SSR Base"
+    },
+    "ogp"     : {
+        "og:url"         : null,
+        "og:title"       : "VUE SSR Base",
+        "og:type"        : "website",
+        "og:image"       : "",
+        "og:description" : "SE.VUESSR - VUE SSR Base",
+        "og:site_name"   : "SE.VUESSR"
+    }
+}

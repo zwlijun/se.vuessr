@@ -22,7 +22,11 @@ const rfs = require('rotating-file-stream')
 const LRUCache = require('lru-cache')
 const VUEServerRender = require('vue-server-renderer')
 const proxy = require('http-proxy-middleware')
+const jsonMerger = require("json-merger");
 //-------------------------------------------
+const VUESSRContext = require("./conf/server/context.json");
+//-------------------------------------------
+
 const resolve = file => path.resolve(__dirname, file)
 
 const isProd = process.env.NODE_ENV === 'production'
@@ -166,6 +170,30 @@ var options = {
 var exampleProxy = proxy(options);
 expressAppServer.use('/api', exampleProxy);
 
+function OGP(ogp){
+    let buf = [];
+
+    if(ogp){
+        for(var key in ogp){
+            buf.push(`<meta property="${key}" content="${ogp[key]}">`);
+        }
+    }
+
+    return buf.join("\n");
+}
+
+function SEO(seo){
+    let buf = [];
+
+    if(seo){
+        for(var key in seo){
+            buf.push(`<meta name="${key}" content="${seo[key]}">`);
+        }
+    }
+
+    return buf.join("\n");
+}
+
 function doRender(req, res){
     const s = Date.now()
 
@@ -173,6 +201,8 @@ function doRender(req, res){
     res.setHeader("X-Server-Info", serverInfo)
 
     const errorHandler = err => {
+        console.log(err);
+
         if (err && err.code === 401) {
             return res.redirect('/login');
         } else if (err && err.code === 404) {
@@ -184,13 +214,36 @@ function doRender(req, res){
             res.status(500).end('500 | Internal Server Error')
         }
     }
+
+    console.log(req.url, req.get("Host"))
     
-    const context = {
-        "title"   : "VUE SSR Base",
-        "url"     : req.url,
-        "cookies" : req.cookies,
-        "server"  : serverInfo
-    }
+    const clientInfo = ((req) => {
+        let host = req.get("Host");
+        let originalUrl = req.originalUrl;
+        let protocol = req.protocol;
+        let absoluteURL = protocol + "://" + host + originalUrl;
+        let relativeURL = req.url;
+
+        return {
+            "absoluteURL": absoluteURL,
+            "relativeURL": relativeURL,
+            "host": host,
+            "pathname": req.path,
+            "cookies": req.cookies
+        };
+    })(req);
+    const context = jsonMerger.mergeObjects([VUESSRContext, {
+        "client": clientInfo,
+        "server": serverInfo,
+        "ogp": {
+            "og:url": clientInfo.absoluteURL
+        }
+    }]);
+
+    context.seoMeta = SEO(context.seo);
+    context.ogpMeta = OGP(context.ogp);
+
+    // console.log(context)
 
     serverRenderer.renderToStream(context)
         .on('error', errorHandler)

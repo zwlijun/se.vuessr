@@ -1,6 +1,8 @@
 import { createVueApp  } from './app'
+import {SEO, OGP} from "./lib/utils/head"
 
 const isDev = process.env.NODE_ENV !== 'production'
+
 
 // This exported function will be called by `bundleRenderer`.
 // This is where we perform data-prefetching to determine the
@@ -12,22 +14,25 @@ export default context => {
         const s = isDev && Date.now()
         const { app, router, store } = createVueApp()
 
-        const { url, cookies, server } = context
-        const { fullPath } = router.resolve(url).route
+        const { client, server, meta, ogp, seo } = context
+        const { fullPath } = router.resolve(client.relativeURL).route
 
         //将服务器信息同步到客户端
-        store.state.server = server
-
-        // if (cookies) {
-        //     store.state.cookies = cookies
-        // }
+        store.state.client     = client
+        store.state.server     = server
+        store.state.meta       = meta
+        store.state.ogp        = ogp
+        store.state.seo        = seo
+        store.state.ogpMeta    = OGP(ogp)
+        store.state.seoMeta    = SEO(seo)
+        //--------------------------
         
-        if (fullPath !== url) {
+        if (fullPath !== client.relativeURL) {
             return reject({ url: fullPath })
         }
 
         // set router's location
-        router.push(url)
+        router.push(client.relativeURL)
 
         // wait until router has resolved possible async hooks
         router.onReady(() => {
