@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const crypto = require('crypto')
 //---------- express middleware ----------
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -232,7 +233,15 @@ function doRender(req, res){
             "cookies": req.cookies
         };
     })(req);
+
+    //------------------------------------------------------------
+    const hmac = crypto.createHmac("sha1", VUESSRContext.service)
+    hmac.update(clientInfo.absoluteURL)
+    const hex_hmac = hmac.digest("hex")
+    //------------------------------------------------------------
+
     const context = jsonMerger.mergeObjects([VUESSRContext, {
+        "nonce": hex_hmac,
         "client": clientInfo,
         "server": serverInfo,
         "ogp": {

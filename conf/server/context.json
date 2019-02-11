@@ -1,5 +1,7 @@
 {
+    "service" : "se.vuessr",
     "title"   : "VUE SSR Base",
+    "nonce"   : null,
     "client"  : null,
     "server"  : null,
     "meta"    : null,
