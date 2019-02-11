@@ -27,8 +27,9 @@ const resolve = file => path.resolve(__dirname, file)
 
 const isProd = process.env.NODE_ENV === 'production'
 const serverInfo =
-    `env/${process.env.NODE_ENV} ` + 
-    `express/${require('express/package.json').version} ` +
+    `env/${process.env.NODE_ENV}; ` + 
+    `express/${require('express/package.json').version}; ` +
+    `vue/${require('vue/package.json').version}; ` +
     `vue-server-renderer/${require('vue-server-renderer/package.json').version}`
 
 console.log("server: " + serverInfo)
