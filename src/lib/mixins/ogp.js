@@ -11,8 +11,6 @@
  */
 'use strict'; 
 
-import {OGP} from "~lib/utils/head";
-
 function getContent(vm){
 	const {ogp} = vm.$options;
 
@@ -28,8 +26,8 @@ const serverMixin = {
 		const ogp = getContent(this);
 
 		if(ogp){
-			this.$ssrContext.ogp = ogp;
-			this.$ssrContext.ogpMeta = OGP(ogp);
+			this.$store.commit("server/ogp", ogp);
+			this.$ssrContext.state = this.$store.state;
 		}
 	}
 };
@@ -39,8 +37,7 @@ const clientMixin = {
 		const ogp = getContent(this);
 
 		if(ogp){
-			this.$options.ogp = ogp;
-			this.$options.ogpMeta = OGP(ogp);
+			this.$store.commit("server/ogp", ogp);
 		}
 	}
 };

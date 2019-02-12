@@ -16,5 +16,7 @@
         "og:image"       : "",
         "og:description" : "SE.VUESSR - VUE SSR Base",
         "og:site_name"   : "SE.VUESSR"
-    }
+    },
+    "seoMeta": null,
+    "ogpMeta": null
 }

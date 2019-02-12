@@ -171,30 +171,6 @@ var options = {
 var exampleProxy = proxy(options);
 expressAppServer.use('/api', exampleProxy);
 
-function OGP(ogp){
-    let buf = [];
-
-    if(ogp){
-        for(var key in ogp){
-            buf.push(`<meta property="${key}" content="${ogp[key]}">`);
-        }
-    }
-
-    return buf.join("\n");
-}
-
-function SEO(seo){
-    let buf = [];
-
-    if(seo){
-        for(var key in seo){
-            buf.push(`<meta name="${key}" content="${seo[key]}">`);
-        }
-    }
-
-    return buf.join("\n");
-}
-
 function doRender(req, res){
     const s = Date.now()
 
@@ -202,7 +178,9 @@ function doRender(req, res){
     res.setHeader("X-Server-Info", serverInfo)
 
     const errorHandler = err => {
-        // console.log(err);
+        if(!isProd){
+            console.log(err);
+        }
 
         if (err && err.code === 401) {
             return res.redirect('/login');
@@ -245,12 +223,9 @@ function doRender(req, res){
         "client": clientInfo,
         "server": serverInfo,
         "ogp": {
-            "og:url": clientInfo.absoluteURL
+            "og:url": (VUESSRContext["ogp"] || {})["og:url"] || clientInfo.absoluteURL
         }
     }]);
-
-    context.seoMeta = SEO(context.seo);
-    context.ogpMeta = OGP(context.ogp);
 
     // console.log(context)
 

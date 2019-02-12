@@ -55,7 +55,8 @@ const serverMixin = {
 		const meta = getContent(this);
 
 		if(meta){
-			this.$ssrContext.meta = parseMeta(meta);
+			this.$store.commit("server/meta", parseMeta(meta));
+			this.$ssrContext.state = this.$store.state;
 		}
 	}
 };
@@ -65,7 +66,7 @@ const clientMixin = {
 		const meta = getContent(this);
 
 		if(meta){
-			this.$options.meta = parseMeta(meta);
+			this.$store.commit("server/meta", parseMeta(meta));
 		}
 	}
 };

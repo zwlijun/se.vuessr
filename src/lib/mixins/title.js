@@ -26,7 +26,8 @@ const serverMixin = {
 		const title = getTitle(this);
 
 		if(title){
-			this.$ssrContext.title = title;
+			this.$store.commit("server/title", title);
+			this.$ssrContext.state = this.$store.state;
 		}
 	}
 };
@@ -36,6 +37,7 @@ const clientMixin = {
 		const title = getTitle(this);
 
 		if(title){
+			this.$store.commit("server/title", title);
 			document.title = title;
 		}
 	}

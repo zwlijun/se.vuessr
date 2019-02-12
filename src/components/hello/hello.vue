@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Hello, world</h1>
-    <p>build by "{{this.$store.state.server}}"</p>
+    <p>build by "{{this.$store.state.server.server}}"</p>
   </div>
 </template>
 
@@ -22,8 +22,8 @@
         },
         ogp(){
             return {
-                "og:url"         : this.$store.state.client.absoluteURL,
-                "og:title"       : "VUE SSR Base",
+                "og:url"         : this.$store.state.server.client.absoluteURL,
+                "og:title"       : "VUE SSR Base - Store",
                 "og:type"        : "website",
                 "og:image"       : "",
                 "og:description" : "SE.VUESSR - VUE SSR Base",

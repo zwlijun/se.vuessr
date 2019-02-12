@@ -1,5 +1,5 @@
 import { createVueApp  } from './app'
-import {SEO, OGP} from "./lib/utils/head"
+import VUESSRContext from "~conf/server/context";
 
 const isDev = process.env.NODE_ENV !== 'production'
 
@@ -17,14 +17,14 @@ export default context => {
         const { client, server, meta, ogp, seo } = context
         const { fullPath } = router.resolve(client.relativeURL).route
 
+        // console.log("context", context)
+
         //将服务器信息同步到客户端
-        store.state.client     = client
-        store.state.server     = server
-        store.state.meta       = meta
-        store.state.ogp        = ogp
-        store.state.seo        = seo
-        store.state.ogpMeta    = OGP(ogp)
-        store.state.seoMeta    = SEO(seo)
+        store.commit("server/client", client)
+        store.commit("server/server", server)
+        store.commit("server/meta", meta)
+        store.commit("server/ogp", ogp)
+        store.commit("server/seo", seo)
         //--------------------------
         
         if (fullPath !== client.relativeURL) {

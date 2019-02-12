@@ -12,9 +12,12 @@ module.exports = merge(base, {
         libraryTarget: 'commonjs2'
     },
     resolve: {
-        alias: {
-            '~lib': path.resolve(__dirname, '../src/lib')
-        }
+        // extensions: ['.js', '.vue', '.json'],
+        // alias: {
+        //     "~lib": path.resolve(__dirname, "../src/lib"),
+        //     "~conf": path.resolve(__dirname, "../conf"),
+        //     "@": path.resolve(__dirname, "../src")
+        // }
     },
     externals: Object.keys(require('../package.json').dependencies),
     plugins: [

@@ -11,8 +11,6 @@
  */
 'use strict'; 
 
-import {SEO} from "~lib/utils/head";
-
 function getContent(vm){
 	const {seo} = vm.$options;
 
@@ -28,8 +26,8 @@ const serverMixin = {
 		const seo = getContent(this);
 
 		if(seo){
-			this.$ssrContext.seo = seo;
-			this.$ssrContext.seoMeta = SEO(seo);
+			this.$store.commit("server/seo", seo);
+			this.$ssrContext.state = this.$store.state;
 		}
 	}
 };
@@ -39,8 +37,7 @@ const clientMixin = {
 		const seo = getContent(this);
 
 		if(seo){
-			this.$options.seo = seo;
-			this.$options.seoMeta = SEO(seo);
+			this.$store.commit("server/seo", seo);
 		}
 	}
 };
