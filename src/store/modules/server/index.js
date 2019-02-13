@@ -20,30 +20,30 @@ export default {
         return VUESSRContext;
     },
     mutations: {
-        service(state, serviceName){
-            state.service = serviceName;
+        service(state, payload){
+            state.service = payload;
         },
-        title(state, title){
-            state.title = title;
+        title(state, payload){
+            state.title = payload;
         },
-        nonce(state, nonce){
-            state.nonce = nonce;
+        nonce(state, payload){
+            state.nonce = payload;
         },
-        client(state, client){
-            state.client = client;
+        client(state, payload){
+            state.client = Object.assign((state.client || {}), payload);
         },
-        server(state, server){
-            state.server = server;
+        server(state, payload){
+            state.server = payload;
         },
-        meta(state, meta){
-            state.meta = meta;
+        meta(state, payload){
+            state.meta = payload;
         },
-        seo(state, seo){
-            state.seo = Object.assign((state.seo || {}), seo);
+        seo(state, payload){
+            state.seo = Object.assign((state.seo || {}), payload);
             state.seoMeta = SEO(state.seo);
         },
-        ogp(state, ogp){
-            state.ogp = Object.assign((state.ogp || {}), ogp);
+        ogp(state, payload){
+            state.ogp = Object.assign((state.ogp || {}), payload);
             state.ogpMeta = OGP(state.ogp);
         }
     }

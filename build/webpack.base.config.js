@@ -1,10 +1,12 @@
 const path = require("path")
-const { VueLoaderPlugin } = require("vue-loader");
-const vueConfig = require("./vue-loader.config")
 const webpack = require("webpack")
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const { VueLoaderPlugin } = require("vue-loader");
+
+const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = {
-    devtool: "#source-map",
+    devtool: isProd ? false : "#cheap-module-source-map",
     entry: {
         app: "./src/entry-client.js",
         vendor: [
@@ -28,7 +30,13 @@ module.exports = {
             "@": path.resolve(__dirname, "../src")
         }
     },
-    plugins: [
+    plugins: isProd ? [
+        new VueLoaderPlugin()
+        // new VueLoaderPlugin(),
+        // new ExtractTextPlugin({ 
+        //     filename: 'static/css/common.[chunkhash].css' 
+        // })
+    ] : [
         new VueLoaderPlugin()
     ],
     module: {
@@ -36,7 +44,17 @@ module.exports = {
         rules: [{
                 test: /\.vue$/,
                 loader: "vue-loader",
-                options: vueConfig
+                options: {
+                    compilerOptions: {
+                        preserveWhitespace: false
+                    },
+                    extractCSS: isProd,
+                    postcss: [
+                        require('autoprefixer')({
+                            "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
+                        })
+                    ]
+                }
             },
             {
                 test: /\.jsx?$/,
@@ -48,7 +66,7 @@ module.exports = {
                 loader: "url-loader",
                 options: {
                     limit: 10000,
-                    name: "static/img/[name].[hash:7].[ext]"
+                    name: "static/img/[name].[chunkhash].[ext]"
                 }
             },
             {
@@ -56,12 +74,25 @@ module.exports = {
                 loader: "url-loader",
                 query: {
                     limit: 10000,
-                    name: "static/fonts/[name].[hash:7].[ext]"
+                    name: "static/fonts/[name].[chunkhash].[ext]"
                 }
             },
             {
                 test: /\.(css|scss)$/,
-                loader: "style-loader!css-loader!postcss-loader!sass-loader"
+                use: ["vue-style-loader", "css-loader", "sass-loader"]
+                // use: isProd ? ExtractTextPlugin.extract({
+                //     use: [
+                //         {
+                //             loader: "css-loader",
+                //             options: {
+                //                 minimize: true
+                //             }
+                //         }, 
+                //         "sass-loader"
+                //     ],
+                //     fallback: "vue-style-loader"
+                // }) : ["vue-style-loader", "css-loader", "sass-loader"]
+                // loader: 'style-loader!css-loader!postcss-loader!sass-loader'
             }
         ]
     },

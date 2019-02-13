@@ -34,6 +34,7 @@ function XNet(name) {
     this.onServiceError = null; //数据服务错误
     this.onNetworkError = null; //网络请求错误
     this.dataTransform = null; //数据转换器
+    //----------------------------------------------------
     this.axios = axios.create({
         "headers": {
             "X-Requested-With": "XMLHttpRequest"
@@ -75,27 +76,27 @@ XNet.prototype = {
         this.onServiceError = options["onServiceError"] || null;
         this.onNetworkError = options["onNetworkError"] || null;
         this.dataTransform = options["dataTransform"] || function(resp){
-            let dataSource = Object.assgin({}, resp);
-            let newResp = {
-                "code": dataSource["code"],
-                "message": dataSource["message"],
-                "success": "0" === dataSource["code"],
-                "recordSize": dataSource["recordSize"] || 0,
-                "pageSize": dataSource["pageSize"] || XNet.PAGE_SIZE,
-                "pageIndex": dataSource["pageIndex"] || 1,
-                "data": dataSource.data || {},
-                "dataSource": dataSource
+            const data = resp.data;
+            const newData = {
+                "code": data["code"] || "",
+                "message": data["message"] || "",
+                "success": "0" === data["code"],
+                "recordSize": data["recordSize"] || 0,
+                "pageSize": data["pageSize"] || XNet.PAGE_SIZE,
+                "pageIndex": data["pageIndex"] || 1
             };
 
-            return newResp;
+            resp.data = Object.assign(resp.data, newData);
+
+            return resp;
         };
         //-----------------------------------------------------------
-        const context = Object.assgin({}, options["context"] || {});
+        const context = Object.assign({}, options["context"] || {});
         if("context" in options){
             delete options["context"];
         };
 
-        this.context = Object.assgin({
+        this.context = Object.assign({
             "name": this.name,
             "showLoading": this.showLoading,
             "loadingText": this.loadingText,
@@ -204,11 +205,11 @@ XNet.prototype = {
         let http = xnet.axios;
         let interceptors = http.interceptors;
 
-        let CancelToken = http.CancelToken;
+        let CancelToken = axios.CancelToken;
         let cancelTokenSource = CancelToken.source();
 
         xnet.cancelTokenSource = cancelTokenSource;
-        xnet.context = Object.assgin({
+        xnet.context = Object.assign({
             "cancelToken": cancelTokenSource.token
         }, context);
 
@@ -228,13 +229,15 @@ XNet.prototype = {
             xnet.dealLoading(false);
 
             //数据转换器
-            resp = context.dataTransform.apply(context, [resp]);
+            const transformResp = context.dataTransform.apply(context, [resp]);
 
-            if(true === resp.success){
-                return resp;
+            const data = transformResp.data;
+
+            if(true === data.success){
+                return transformResp;
             }else{
                 return Promise.reject({
-                    "xnet": resp
+                    "xnet": transformResp
                 });
             }
         }, (error) => {
@@ -244,31 +247,35 @@ XNet.prototype = {
             return Promise.reject(error);
         });
 
-        http.request(context).then((resp) => {
-            xnet.log(`${context.url} -> response time: ${Date.now() - startTime}ms`);
-            
+        return http.request(context).then((resp) => {
+            xnet.log(`[ok] ${context.url} -> response time: ${Date.now() - startTime}ms`);
+
             xnet.dispatch("complete", [resp, true]);
             xnet.dispatch("success", [resp]);
+
+            return Promise.resolve(resp);
         }).catch((err) => {
-            xnet.log(`${context.url} -> response time: ${Date.now() - startTime}ms`);
+            xnet.log(`[ex] ${context.url} -> response time: ${Date.now() - startTime}ms`);
 
             xnet.dispatch("complete", [err, false]);
             xnet.dispatch("error", [err]);
 
-            if(http.isCancel(err)){
+            if(axios.isCancel(err)){
                 xnet.dispatch("cancel", [err]);
             }else{
                 if(err.response){
                     xnet.dispatch("resposneError", [err]);
                 }else if(err.request){
-                    xnet.dispatch("requestError", [err]);                    
+                    xnet.dispatch("requestError", [err]);
                 }else if(err.xnet){
                     xnet.dispatch("serviceError", [err.xnet]);
                 }
 
                 xnet.parseError(err);
             }
-        })
+
+            return Promise.reject(err)
+        });
     }
 };
 
@@ -288,7 +295,7 @@ XNet.create = function(name){
             xnet.createOptions(options);
         },
         send: function(){
-            xnet.send();
+            return xnet.send();
         },
         cancel: function(message){
             xnet.cancel(message);
@@ -317,7 +324,7 @@ XNet.exec = function(name, options){
     const xnet = XNet.create(name);
 
     xnet.createOptions(options || {});
-    xnet.send();
+    return xnet.send();
 }
 
-export {create, getInstance, exec};
+export default XNet;

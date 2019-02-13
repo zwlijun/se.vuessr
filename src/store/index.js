@@ -1,3 +1,16 @@
+/**********************************************************
+ * Copyright (c) SESHENGHUO.COM All rights reserved       *
+ **********************************************************/
+
+/**
+ * VUEX Store
+ * @charset utf-8
+ * @author lijun
+ * @git: https://github.com/zwlijun/se.vuessr
+ * @date 2019.2
+ */
+'use strict';
+
 import Vue from 'vue'
 import Vuex from 'vuex'
 

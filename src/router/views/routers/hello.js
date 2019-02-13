@@ -3,7 +3,7 @@
  **********************************************************/
 
 /**
- * VUE Store 模块引用
+ * VUE Routers - /hello
  * @charset utf-8
  * @author lijun
  * @git: https://github.com/zwlijun/se.vuessr
@@ -11,10 +11,10 @@
  */
 'use strict';
 
-import server from "./server";
-import hello from "./hello";
+import hello from "@/views/hello/hello";
 
 export default {
-	server,
-	hello
+	"name": "hello",
+	"path": "/hello",
+	"component": hello
 };

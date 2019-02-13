@@ -1,22 +1,32 @@
-import Vue from "vue"
-import Router from "vue-router"
+/**********************************************************
+ * Copyright (c) SESHENGHUO.COM All rights reserved       *
+ **********************************************************/
+
+/**
+ * VUE Router
+ * @charset utf-8
+ * @author lijun
+ * @git: https://github.com/zwlijun/se.vuessr
+ * @date 2019.2
+ */
+'use strict';
+
+import Vue from "vue";
+import Router from "vue-router";
 
 //-------------------------------------------[[
-import hello from "@/components/hello/hello"
+import views from "./views";
 //-------------------------------------------]]
 
-Vue.use(Router)
+Vue.use(Router);
 
 export function createRouter () {
-  return new Router({
-    "mode": 'history',
-    "routes": [
-      // ...
-      {
-        "name": "hello",
-        "path": "/hello",
-        "component": hello
-      }
-    ]
-  })
-}
+    const options = {
+        "mode": 'history',
+        "routes": [
+            ...views
+        ]
+    };
+
+    return new Router(options)
+};
