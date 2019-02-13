@@ -51,6 +51,7 @@ const JSONBodyParser = bodyParser.json()
 // create application/x-www-form-urlencoded parser
 const URLEncodedBodyParser = bodyParser.urlencoded({ extended: false })
 
+expressAppServer.use(connectTimeout("30s"))
 expressAppServer.use(connectRID({
     "headerName": "X-Connect-RID"
 }))
