@@ -12,6 +12,7 @@
 'use strict';
 
 function CreateApp(index, port){
+    //@see https://pm2.io/doc/en/runtime/reference/ecosystem-file/
     return {
         "name": "SE.VUESSR/AppServer(" + index + ")/" + port,
         "script": "AppServer.js",
