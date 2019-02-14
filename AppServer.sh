@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $1 = "prod" ]; then
+if [ "$1" = "prod" ]; then
 	./AppServer.Prod.sh
 else
 	./AppServer.Dev.sh
