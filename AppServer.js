@@ -76,7 +76,7 @@ expressAppServer.use(errorhandler({
     "log": (err, str, req) => {
         let title = 'Error in ' + req.method + ' ' + req.url
 
-        if(process.env.NODE_ENV !== 'production'){
+        if(!isProd){
             notifier.notify({
                 title: title,
                 message: str
