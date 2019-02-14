@@ -16,7 +16,7 @@ function CreateApp(index, port){
     return {
         "name": "SE.VUESSR/AppServer(" + index + ")/" + port,
         "script": "AppServer.js",
-        "instances": "2",
+        "instances": "max",
         "interpreter": "node",
         "env_dev": {
             "NODE_ENV": "development",
@@ -43,5 +43,5 @@ module.exports = {
         }
 
         return list;
-    })([8080, 8081])
+    })([8080])
 };
