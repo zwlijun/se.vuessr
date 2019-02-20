@@ -62,16 +62,19 @@ module.exports = {
 
 		if(ex.response){
 			code = ex.response.status;
+		}else if(ex.url){
+			res.redirect(301, ex.url);
+			return ;
 		}
-		
 
 		let page = parse(String(code));
 
 		if(null !== page){
 			if("redirect" == page.type){
-				res.redirect(page.value);
+				res.redirect(301, page.value);
+				return ;
 			}else{
-				res.sendStatus(code);
+				res.status(code || 500).send(page.value);
 			}
 		}else{
 			res.sendStatus(500);

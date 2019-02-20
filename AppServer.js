@@ -48,8 +48,10 @@ const HttpConf = require("./conf/server/http.conf");
 
 const resolve = file => path.resolve(__dirname, file)
 
-const securePort = process.env.SECURE || 0
-const httpPort = process.env.PORT || 8080
+const DEFAULT_SECURE_PORT = 0;
+const DEFAULT_HTTP_PORT = 8080;
+const securePort = process.env.SECURE || DEFAULT_SECURE_PORT
+const httpPort = process.env.PORT || DEFAULT_HTTP_PORT
 
 const isProd = process.env.NODE_ENV === 'production'
 const serverInfo =
@@ -202,9 +204,11 @@ function doRender(req, res){
     res.setHeader("Content-Type", "text/html")
     res.setHeader("X-Server-Info", serverInfo)
 
+    const useHTTPS = (securePort > 0 && true === HttpConf.forceSecure && "http" === req.protocol);
+
     const errorHandler = err => {
         if(!isProd){
-            console.log(err);
+            console.log("errorHandler => ", err);
         }
 
         ErrorPageConf.process(err, req, res);
@@ -219,6 +223,12 @@ function doRender(req, res){
         let absoluteURL = protocol + "://" + host + originalUrl;
         let relativeURL = req.url;
 
+        if(useHTTPS){
+            host = host.replace("" + httpPort, "" + securePort);
+            protocol = "https";
+            absoluteURL = protocol + "://" + host + originalUrl;
+        }
+
         return {
             "absoluteURL": absoluteURL,
             "relativeURL": relativeURL,
@@ -228,8 +238,8 @@ function doRender(req, res){
         };
     })(req);
 
-    if(true === HttpConf.forceSecure && "http" === req.protocol){
-        res.redirect(301, clientInfo.absoluteURL.replace("http", "https").replace("" + httpPort, "" + securePort));
+    if(useHTTPS){
+        res.redirect(301, clientInfo.absoluteURL);
         return ;
     }
 
