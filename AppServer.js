@@ -1,13 +1,28 @@
+/**********************************************************
+ * Copyright (c) SESHENGHUO.COM All rights reserved       *
+ **********************************************************/
+
+/**
+ * AppServer实例
+ * @charset utf-8
+ * @author lijun
+ * @git: https://github.com/zwlijun/se.vuessr
+ * @date 2018.12
+ */
+'use strict';
+
 const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
+const http = require('http')
+const https = require('https')
 //---------- express middleware ----------
 const express = require('express')
 const bodyParser = require('body-parser')
 const connectRID = require('connect-rid')
 const cors = require('cors')
 const csurf = require('csurf')
-const errorhandler = require('errorhandler')
+const ErrorHandler = require('errorhandler')
 const favicon = require('serve-favicon')
 const serveStatic = require('serve-static')
 const compression = require('compression')
@@ -25,10 +40,16 @@ const VUEServerRender = require('vue-server-renderer')
 const proxy = require('http-proxy-middleware')
 const jsonMerger = require("json-merger");
 //-------------------------------------------
-const VUESSRContext = require("./conf/server/context.json");
+const VUESSRContext = require("./conf/server/context.conf");
+const ProxyServiceConf = require("./conf/server/proxy.conf");
+const ErrorPageConf = require("./conf/server/errorpage.conf");
+const HttpConf = require("./conf/server/http.conf");
 //-------------------------------------------
 
 const resolve = file => path.resolve(__dirname, file)
+
+const securePort = process.env.SECURE || 0
+const httpPort = process.env.PORT || 8080
 
 const isProd = process.env.NODE_ENV === 'production'
 const serverInfo =
@@ -72,7 +93,7 @@ var errorLogStream = rfs('error.log', {
   path: logDirectory
 })
 
-expressAppServer.use(errorhandler({
+expressAppServer.use(ErrorHandler({
     "log": (err, str, req) => {
         let title = 'Error in ' + req.method + ' ' + req.url
 
@@ -162,15 +183,18 @@ expressAppServer.use('/service-worker.js', serve('./dist/service-worker.js', tru
 /**
  * proxy middleware options
  * 代理跨域配置
- * @type {{target: string, changeOrigin: boolean, pathRewrite: {^/api: string}}}
  */
-var options = {
-    target: 'http://api.domain.com', // target host
-    changeOrigin: true // needed for virtual hosted sites
-};
+let proxyService = null;
+let proxyServiceSize = ProxyServiceConf.length;
+for(let i = 0; i < proxyServiceSize; i++){
+    proxyService = ProxyServiceConf[i];
 
-var exampleProxy = proxy(options);
-expressAppServer.use('/api', exampleProxy);
+    if(proxyService.turn !== "on"){
+        continue;
+    }
+
+    expressAppServer.use(proxy(proxyService.uri, proxyService.options));
+}
 
 function doRender(req, res){
     const s = Date.now()
@@ -183,16 +207,7 @@ function doRender(req, res){
             console.log(err);
         }
 
-        if (err && err.code === 401) {
-            return res.redirect('/login');
-        } else if (err && err.code === 404) {
-            // return res.redirect('/404');
-            res.status(404).end('404 | Page Not Found')
-        } else {
-            // Render Error Page or Redirect
-            // return res.redirect('/500');
-            res.status(500).end('500 | Internal Server Error')
-        }
+        ErrorPageConf.process(err, req, res);
     }
 
     // console.log(req.url, req.get("Host"))
@@ -212,6 +227,11 @@ function doRender(req, res){
             "cookies": req.cookies
         };
     })(req);
+
+    if(true === HttpConf.forceSecure && "http" === req.protocol){
+        res.redirect(301, clientInfo.absoluteURL.replace("http", "https").replace("" + httpPort, "" + securePort));
+        return ;
+    }
 
     //------------------------------------------------------------
     const hmac = crypto.createHmac("sha1", VUESSRContext.service)
@@ -242,7 +262,8 @@ expressAppServer.get('*', isProd ? doRender : (req, res) => {
     serverRendererPromise.then(() => doRender(req, res))
 })
 
-const port = process.env.PORT || 8080
-expressAppServer.listen(port, () => {
-    console.log(`server started at localhost: ${port}`)
-})
+HttpConf.listen(expressAppServer, httpPort, securePort)
+
+// expressAppServer.listen(httpPort, () => {
+//     console.log(`server started at localhost: ${port}`)
+// })

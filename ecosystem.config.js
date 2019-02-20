@@ -14,22 +14,24 @@
 function CreateApp(index, port){
     //@see https://pm2.io/doc/en/runtime/reference/ecosystem-file/
     return {
-        "name": "SE.VUESSR/AppServer(" + index + ")/" + port,
+        "name": "SE.VUESSR/AppServer(" + index + ")/" + port.http + (port.secure ? "|" + port.secure : ""),
         "script": "AppServer.js",
         "instances": "max",
         "interpreter": "node",
         "env_dev": {
             "NODE_ENV": "development",
-            "PORT": port
+            "PORT": port.http,
+            "SECURE": port.secure || 0
         },
         "env_prod": {
             "NODE_ENV": "production",
-            "PORT": port
+            "PORT": port.http,
+            "SECURE": port.secure || 0
         },
-        "pid_file": "./logs/se.vuess." + port + ".pid",
+        "pid_file": "./logs/se.vuess." + port.http + ".pid",
         "log": true,
-        "output": "./logs/se.vuess." + port + ".out.log",
-        "error": "./logs/se.vuess." + port + ".err.log"
+        "output": "./logs/se.vuess." + port.http + ".out.log",
+        "error": "./logs/se.vuess." + port.http + ".err.log"
     };
 }
 
@@ -43,5 +45,7 @@ module.exports = {
         }
 
         return list;
-    })([8080])
+    })([
+        {"http": 8080, "secure": 44300}
+    ])
 };

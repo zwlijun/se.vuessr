@@ -11,7 +11,7 @@
  */
 'use strict';
 
-import VUESSRContext from "~conf/server/context";
+import VUESSRContext from "~conf/server/context.conf";
 import {SEO, OGP} from "~lib/utils/head";
 
 export default {

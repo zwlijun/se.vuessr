@@ -1,5 +1,5 @@
 import { createVueApp  } from './app'
-import VUESSRContext from "~conf/server/context";
+import VUESSRContext from "~conf/server/context.conf";
 
 const isDev = process.env.NODE_ENV !== 'production'
 
