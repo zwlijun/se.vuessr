@@ -46,7 +46,11 @@ function httpSecureEvent(httpServer){
 function createHttpServer(expressAppServer, port){
 	const httpServer = http.createServer(expressAppServer);
 
-	createServer(httpServer, port, "http");
+	if(port && port > 0){
+		createServer(httpServer, port, "http");
+	}else{
+		console.log(`HTTP server port(${port}) is invalid.`)
+	}
 }
 
 function createHttpSecureServer(expressAppServer, port){
@@ -66,6 +70,8 @@ function createHttpSecureServer(expressAppServer, port){
 		}else{
 			console.log("HTTPS server startup failed, server.key or server.crt not found.")
 		}
+	}else{
+		console.log(`HTTPS server port(${port}) is invalid.`)
 	}
 }
 

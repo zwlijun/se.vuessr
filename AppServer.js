@@ -47,7 +47,7 @@ const HttpConf = require("./conf/server/http.conf");
 const resolve = file => path.resolve(__dirname, file)
 
 const DEFAULT_SECURE_PORT = 0;
-const DEFAULT_HTTP_PORT = 8080;
+const DEFAULT_HTTP_PORT = 0;
 const securePort = process.env.SECURE || DEFAULT_SECURE_PORT
 const httpPort = process.env.PORT || DEFAULT_HTTP_PORT
 
@@ -272,6 +272,3 @@ expressAppServer.get('*', isProd ? doRender : (req, res) => {
 
 HttpConf.listen(expressAppServer, httpPort, securePort)
 
-// expressAppServer.listen(httpPort, () => {
-//     console.log(`server started at localhost: ${port}`)
-// })

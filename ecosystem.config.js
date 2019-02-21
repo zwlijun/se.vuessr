@@ -13,25 +13,40 @@
 
 function CreateApp(index, port){
     //@see https://pm2.io/doc/en/runtime/reference/ecosystem-file/
+    let httpPort = port.http || 0;
+    let securePort = port.secure || 0;
+    let buf = [];
+    let suffix = "";
+
+    if(httpPort > 0){
+        buf.push(httpPort);
+    }
+
+    if(securePort > 0){
+        buf.push(securePort);
+    }
+
+    suffix = buf.join("|");
+
     return {
-        "name": "SE.VUESSR/AppServer(" + index + ")/" + port.http + (port.secure ? "|" + port.secure : ""),
+        "name": "SE.VUESSR/AppServer(" + index + ")/" + suffix,
         "script": "AppServer.js",
         "instances": "max",
         "interpreter": "node",
         "env_dev": {
             "NODE_ENV": "development",
-            "PORT": port.http,
-            "SECURE": port.secure || 0
+            "PORT": httpPort,
+            "SECURE": securePort
         },
         "env_prod": {
             "NODE_ENV": "production",
-            "PORT": port.http,
-            "SECURE": port.secure || 0
+            "PORT": httpPort,
+            "SECURE": securePort
         },
-        "pid_file": "./logs/se.vuess." + port.http + ".pid",
+        "pid_file": "./logs/se.vuessr." + suffix + ".pid",
         "log": true,
-        "output": "./logs/se.vuess." + port.http + ".out.log",
-        "error": "./logs/se.vuess." + port.http + ".err.log"
+        "output": "./logs/se.vuessr." + suffix + ".out.log",
+        "error": "./logs/se.vuessr." + suffix + ".err.log"
     };
 }
 
