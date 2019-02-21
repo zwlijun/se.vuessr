@@ -67,6 +67,7 @@ const lurCacheOptions = new LRUCache({
 
 const expressAppServer = express()
 
+expressAppServer.disable("x-powered-by")
 // create application/json parser
 const JSONBodyParser = bodyParser.json()
 // create application/x-www-form-urlencoded parser
