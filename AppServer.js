@@ -68,6 +68,7 @@ const lurCacheOptions = new LRUCache({
 const expressAppServer = express()
 
 expressAppServer.disable("x-powered-by")
+expressAppServer.enable("trust proxy");
 // create application/json parser
 const JSONBodyParser = bodyParser.json()
 // create application/x-www-form-urlencoded parser
@@ -174,7 +175,10 @@ const serve = (path, cache) => express.static(resolve(path), {
     }
 })
 
-expressAppServer.use(compression({ threshold: 0 }))
+expressAppServer.use(compression({ 
+    threshold: 0,
+    level: 9
+}))
 // expressAppServer.use(favicon('./favicon.ico'))
 expressAppServer.use('/dist', serve('./dist', true))
 expressAppServer.use('/static', serve('./dist/static', true))
