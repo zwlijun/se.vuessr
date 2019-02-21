@@ -26,7 +26,7 @@ function CreateApp(index, port){
         buf.push(securePort);
     }
 
-    suffix = buf.join("|");
+    suffix = buf.join("~");
 
     return {
         "name": "SE.VUESSR/AppServer(" + index + ")/" + suffix,
@@ -45,8 +45,8 @@ function CreateApp(index, port){
         },
         "pid_file": "./logs/se.vuessr." + suffix + ".pid",
         "log": true,
-        "output": "./logs/se.vuessr." + suffix + ".out.log",
-        "error": "./logs/se.vuessr." + suffix + ".err.log"
+        "output": "./logs/se.vuessr." + suffix + ".out",
+        "error": "./logs/se.vuessr." + suffix + ".err"
     };
 }
 
