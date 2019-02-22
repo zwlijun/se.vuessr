@@ -11,31 +11,31 @@
  */
 'use strict';
 
-const fs = require('fs')
-const path = require('path')
-const crypto = require('crypto')
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
 //---------- express middleware ----------
-const express = require('express')
-const bodyParser = require('body-parser')
-const connectRID = require('connect-rid')
-const cors = require('cors')
-const csurf = require('csurf')
-const ErrorHandler = require('errorhandler')
-const favicon = require('serve-favicon')
-const serveStatic = require('serve-static')
-const compression = require('compression')
-const morgan = require('morgan')
-const multer  = require('multer')
-const session = require('express-session')
-const responseTime = require('response-time')
-const cookieParser = require('cookie-parser')
-const connectTimeout = require('connect-timeout')
-const notifier = require('node-notifier')
-const rfs = require('rotating-file-stream')
+const express = require('express');
+const bodyParser = require('body-parser');
+const connectRID = require('connect-rid');
+const cors = require('cors');
+const csurf = require('csurf');
+const ErrorHandler = require('errorhandler');
+const favicon = require('serve-favicon');
+const serveStatic = require('serve-static');
+const compression = require('compression');
+const morgan = require('morgan');
+const multer  = require('multer');
+const session = require('express-session');
+const responseTime = require('response-time');
+const cookieParser = require('cookie-parser');
+const connectTimeout = require('connect-timeout');
+const notifier = require('node-notifier');
+const rfs = require('rotating-file-stream');
 //-------------------------------------------
-const LRUCache = require('lru-cache')
-const VUEServerRender = require('vue-server-renderer')
-const proxy = require('http-proxy-middleware')
+const LRUCache = require('lru-cache');
+const VUEServerRender = require('vue-server-renderer');
+const proxy = require('http-proxy-middleware');
 const jsonMerger = require("json-merger");
 //-------------------------------------------
 const VUESSRContext = require("./conf/server/context.conf");
@@ -44,66 +44,70 @@ const ErrorPageConf = require("./conf/server/errorpage.conf");
 const HttpConf = require("./conf/server/http.conf");
 //-------------------------------------------
 
-const resolve = file => path.resolve(__dirname, file)
+const resolve = file => path.resolve(__dirname, file);
 
 const DEFAULT_SECURE_PORT = 0;
 const DEFAULT_HTTP_PORT = 0;
-const securePort = process.env.SECURE || DEFAULT_SECURE_PORT
-const httpPort = process.env.PORT || DEFAULT_HTTP_PORT
+const securePort = process.env.SECURE || DEFAULT_SECURE_PORT;
+const httpPort = process.env.PORT || DEFAULT_HTTP_PORT;
 
-const isProd = process.env.NODE_ENV === 'production'
+const isProd = process.env.NODE_ENV === 'production';
 const serverInfo =
     `env/${process.env.NODE_ENV}; ` + 
     `express/${require('express/package.json').version}; ` +
     `vue/${require('vue/package.json').version}; ` +
-    `vue-server-renderer/${require('vue-server-renderer/package.json').version}`
+    `vue-server-renderer/${require('vue-server-renderer/package.json').version}`;
 
-console.log("server: " + serverInfo)
+console.log("server: " + serverInfo);
 
 const lurCacheOptions = new LRUCache({
     max: 1000,
     maxAge: 1000 * 60 * 15
-})
+});
 
-const expressAppServer = express()
+if(!isProd){
+    require('easy-monitor')(VUESSRContext.service);
+}
 
-expressAppServer.disable("x-powered-by")
+const expressAppServer = express();
+
+expressAppServer.disable("x-powered-by");
 expressAppServer.enable("trust proxy");
 // create application/json parser
-const JSONBodyParser = bodyParser.json()
+const JSONBodyParser = bodyParser.json();
 // create application/x-www-form-urlencoded parser
-const URLEncodedBodyParser = bodyParser.urlencoded({ extended: false })
+const URLEncodedBodyParser = bodyParser.urlencoded({ extended: false });
 
-expressAppServer.use(connectTimeout("30s"))
+expressAppServer.use(connectTimeout("30s"));
 expressAppServer.use(connectRID({
     "headerName": "X-Connect-RID"
-}))
-expressAppServer.use(cookieParser())
-expressAppServer.use(responseTime())
+}));
+expressAppServer.use(cookieParser());
+expressAppServer.use(responseTime());
 
 // 记录错误
-const logDirectory = path.join(__dirname, 'logs')
+const logDirectory = path.join(__dirname, 'logs');
 // ensure log directory exists
-fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 // create a rotating write stream
 var accessLogStream = rfs('access.log', {
   interval: '1d', // rotate daily
   path: logDirectory
-})
+});
 var errorLogStream = rfs('error.log', {
   interval: '1d', // rotate daily
   path: logDirectory
-})
+});
 
 expressAppServer.use(ErrorHandler({
     "log": (err, str, req) => {
-        let title = 'Error in ' + req.method + ' ' + req.url
+        let title = 'Error in ' + req.method + ' ' + req.url;
 
         if(!isProd){
             notifier.notify({
                 title: title,
                 message: str
-            })
+            });
         }else{
             req.extitle = title;
             req.exmsg = str;
@@ -117,31 +121,31 @@ expressAppServer.use(ErrorHandler({
 
 expressAppServer.use(morgan('combined', {
     stream: accessLogStream
-}))
+}));
 expressAppServer.use(morgan('combined', {
     skip: function (req, res) { 
-        return res.statusCode < 400 
+        return res.statusCode < 400 ;
     },
     stream: errorLogStream
-}))
+}));
 
-let serverRenderer
-let serverRendererPromise
-const renderTemplatePath = resolve('./src/templates/index.render.html')
+let serverRenderer;
+let serverRendererPromise;
+const renderTemplatePath = resolve('./src/templates/index.render.html');
 
 if (isProd) {
     // In production: create server renderer using template and built server bundle.
     // The server bundle is generated by vue-ssr-webpack-plugin.
-    const template = fs.readFileSync(renderTemplatePath, 'utf-8')
-    const bundle = require('./dist/vue-ssr-server-bundle.json')
+    const template = fs.readFileSync(renderTemplatePath, 'utf-8');
+    const bundle = require('./dist/vue-ssr-server-bundle.json');
     // The client manifests are optional, but it allows the renderer
     // to automatically infer preload/prefetch links and directly add <script>
     // tags for any async chunks used during render, avoiding waterfall requests.
-    const clientManifest = require('./dist/vue-ssr-client-manifest.json')
+    const clientManifest = require('./dist/vue-ssr-client-manifest.json');
     serverRenderer = createRenderer(bundle, {
         template,
         clientManifest
-    })
+    });
 } else {
     // In development: setup the dev server with watch and hot-reload,
     // and create a new renderer on bundle / index template update.
@@ -149,9 +153,9 @@ if (isProd) {
         expressAppServer,
         renderTemplatePath,
         (bundle, options) => {
-            serverRenderer = createRenderer(bundle, options)
+            serverRenderer = createRenderer(bundle, options);
         }
-    )
+    );
 }
 
 
@@ -164,26 +168,26 @@ function createRenderer (bundle, options) {
     basedir: resolve('./dist'),
     // recommended for performance
     runInNewContext: false
-  }))
+  }));
 }
 
 const serve = (path, cache) => express.static(resolve(path), {
     "maxAge": cache && isProd ? "7d" : 0,
     "etag": true === cache,
     "setHeaders": (res, path, stat) => {
-        res.setHeader("X-Server-Info", serverInfo)
+        res.setHeader("X-Server-Info", serverInfo);
     }
-})
+});
 
 expressAppServer.use(compression({ 
     threshold: 0,
     level: 9
-}))
-// expressAppServer.use(favicon('./favicon.ico'))
-expressAppServer.use('/dist', serve('./dist', true))
-expressAppServer.use('/static', serve('./dist/static', true))
-expressAppServer.use('/manifest.json', serve('./dist/vue-ssr-client-manifest.json', true))
-expressAppServer.use('/service-worker.js', serve('./dist/service-worker.js', true))
+}));
+// expressAppServer.use(favicon('./favicon.ico'));
+expressAppServer.use('/dist', serve('./dist', true));
+expressAppServer.use('/static', serve('./dist/static', true));
+expressAppServer.use('/manifest.json', serve('./dist/vue-ssr-client-manifest.json', true));
+expressAppServer.use('/service-worker.js', serve('./dist/service-worker.js', true));
 
 /**
  * proxy middleware options
@@ -202,10 +206,10 @@ for(let i = 0; i < proxyServiceSize; i++){
 }
 
 function doRender(req, res){
-    const s = Date.now()
+    const s = Date.now();
 
-    res.setHeader("Content-Type", "text/html")
-    res.setHeader("X-Server-Info", serverInfo)
+    res.setHeader("Content-Type", "text/html");
+    res.setHeader("X-Server-Info", serverInfo);
 
     const useHTTPS = (securePort > 0 && true === HttpConf.forceSecure && "http" === req.protocol);
 
@@ -247,9 +251,9 @@ function doRender(req, res){
     }
 
     //------------------------------------------------------------
-    const hmac = crypto.createHmac("sha1", VUESSRContext.service)
-    hmac.update(clientInfo.absoluteURL)
-    const hex_hmac = hmac.digest("hex")
+    const hmac = crypto.createHmac("sha1", VUESSRContext.service);
+    hmac.update(clientInfo.absoluteURL);
+    const hex_hmac = hmac.digest("hex");
     //------------------------------------------------------------
 
     const context = jsonMerger.mergeObjects([VUESSRContext, {
@@ -266,14 +270,14 @@ function doRender(req, res){
     serverRenderer.renderToStream(context)
         .on('error', errorHandler)
         .on('end', () => {
-            const timing = (Date.now() - s)
-            console.log(`whole request: ${timing}ms`)
-        }).pipe(res)
+            const timing = (Date.now() - s);
+            console.log(`whole request: ${timing}ms`);
+        }).pipe(res);
 }
 
 expressAppServer.get('*', isProd ? doRender : (req, res) => {
-    serverRendererPromise.then(() => doRender(req, res))
+    serverRendererPromise.then(() => doRender(req, res));
 })
 
-HttpConf.listen(expressAppServer, httpPort, securePort)
+HttpConf.listen(expressAppServer, httpPort, securePort);
 

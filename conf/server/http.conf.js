@@ -76,7 +76,7 @@ function createHttpSecureServer(expressAppServer, port){
 }
 
 module.exports = {
-	forceSecure: true,
+	forceSecure: false,
 	listen: function(expressAppServer, httpPort, securePort){
 		createHttpServer(expressAppServer, httpPort)
 		createHttpSecureServer(expressAppServer, securePort)
