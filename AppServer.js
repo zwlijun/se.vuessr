@@ -46,6 +46,8 @@ const HttpConf = require("./conf/server/http.conf");
 
 const resolve = file => path.resolve(__dirname, file);
 
+const debugMode = process.env.DEBUG === true;
+
 const DEFAULT_SECURE_PORT = 0;
 const DEFAULT_HTTP_PORT = 0;
 const securePort = process.env.SECURE || DEFAULT_SECURE_PORT;
@@ -65,7 +67,7 @@ const lurCacheOptions = new LRUCache({
     maxAge: 1000 * 60 * 15
 });
 
-if(!isProd){
+if(debugMode){
     require('easy-monitor')(VUESSRContext.service);
 }
 
@@ -214,7 +216,7 @@ function doRender(req, res){
     const useHTTPS = (securePort > 0 && true === HttpConf.forceSecure && "http" === req.protocol);
 
     const errorHandler = err => {
-        if(!isProd){
+        if(debugMode){
             console.log("errorHandler => ", err);
         }
 

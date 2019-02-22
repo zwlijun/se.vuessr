@@ -36,12 +36,14 @@ function CreateApp(index, port){
         "env_dev": {
             "NODE_ENV": "development",
             "PORT": httpPort,
-            "SECURE": securePort
+            "SECURE": securePort,
+            "DEBUG": true
         },
         "env_prod": {
             "NODE_ENV": "production",
             "PORT": httpPort,
-            "SECURE": securePort
+            "SECURE": securePort,
+            "DEBUG": false
         },
         "pid_file": "./logs/se.vuessr." + suffix + ".pid",
         "log": true,
