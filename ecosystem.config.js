@@ -18,20 +18,15 @@ function CreateApp(index, port){
     let buf = [];
     let suffix = "";
 
-    if(httpPort > 0){
-        buf.push(httpPort);
-    }
-
-    if(securePort > 0){
-        buf.push(securePort);
-    }
+    buf.push(httpPort);
+    buf.push(securePort);
 
     suffix = buf.join("~");
 
     return {
         "name": "SE.VUESSR/AppServer(" + index + ")/" + suffix,
-        "script": "AppServer.js",
-        "instances": "3",
+        "script": "./AppServer.js",
+        "instances": "max",
         "interpreter": "node",
         "env_dev": {
             "NODE_ENV": "development",
@@ -63,6 +58,6 @@ module.exports = {
 
         return list;
     })([
-        {"http": 8080, "secure": 44300}
+        {"http": 9000, "secure": 9443}
     ])
 };
