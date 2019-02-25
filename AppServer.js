@@ -46,7 +46,7 @@ const HttpConf = require("./conf/server/http.conf");
 
 const resolve = file => path.resolve(__dirname, file);
 
-const debugMode = process.env.DEBUG === true;
+const debugMode = process.env.DEBUG === "true";
 
 const DEFAULT_SECURE_PORT = 0;
 const DEFAULT_HTTP_PORT = 0;
@@ -60,6 +60,7 @@ const serverInfo =
     `vue/${require('vue/package.json').version}; ` +
     `vue-server-renderer/${require('vue-server-renderer/package.json').version}`;
 
+console.log("DEBUG MODE: " + debugMode);
 console.log("server: " + serverInfo);
 
 const lurCacheOptions = new LRUCache({
@@ -75,17 +76,6 @@ const expressAppServer = express();
 
 expressAppServer.disable("x-powered-by");
 expressAppServer.enable("trust proxy");
-// create application/json parser
-const JSONBodyParser = bodyParser.json();
-// create application/x-www-form-urlencoded parser
-const URLEncodedBodyParser = bodyParser.urlencoded({ extended: false });
-
-expressAppServer.use(connectTimeout("30s"));
-expressAppServer.use(connectRID({
-    "headerName": "X-Connect-RID"
-}));
-expressAppServer.use(cookieParser());
-expressAppServer.use(responseTime());
 
 // 记录错误
 const logDirectory = path.join(__dirname, 'logs');
@@ -131,6 +121,18 @@ expressAppServer.use(morgan('combined', {
     stream: errorLogStream
 }));
 
+// create application/json parser
+const JSONBodyParser = bodyParser.json();
+// create application/x-www-form-urlencoded parser
+const URLEncodedBodyParser = bodyParser.urlencoded({ extended: false });
+
+expressAppServer.use(connectTimeout("30s"));
+expressAppServer.use(connectRID({
+    "headerName": "X-Connect-RID"
+}));
+expressAppServer.use(cookieParser());
+expressAppServer.use(responseTime());
+
 let serverRenderer;
 let serverRendererPromise;
 const renderTemplatePath = resolve('./src/templates/index.render.html');
@@ -160,7 +162,6 @@ if (isProd) {
     );
 }
 
-
 function createRenderer (bundle, options) {
   // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
   return VUEServerRender.createBundleRenderer(bundle, Object.assign(options, {
@@ -176,6 +177,7 @@ function createRenderer (bundle, options) {
 const serve = (path, cache) => express.static(resolve(path), {
     "maxAge": cache && isProd ? "7d" : 0,
     "etag": true === cache,
+    "index": false,
     "setHeaders": (res, path, stat) => {
         res.setHeader("X-Server-Info", serverInfo);
     }
@@ -185,11 +187,6 @@ expressAppServer.use(compression({
     threshold: 0,
     level: 9
 }));
-// expressAppServer.use(favicon('./favicon.ico'));
-expressAppServer.use('/dist', serve('./dist', true));
-expressAppServer.use('/static', serve('./dist/static', true));
-expressAppServer.use('/manifest.json', serve('./dist/vue-ssr-client-manifest.json', true));
-expressAppServer.use('/service-worker.js', serve('./dist/service-worker.js', true));
 
 /**
  * proxy middleware options
@@ -223,7 +220,7 @@ function doRender(req, res){
         ErrorPageConf.process(err, req, res);
     }
 
-    // console.log(req.url, req.get("Host"))
+    console.log(req.url, req.get("Host"))
     
     const clientInfo = ((req) => {
         let host = req.get("Host");
@@ -276,10 +273,17 @@ function doRender(req, res){
             console.log(`whole request: ${timing}ms`);
         }).pipe(res);
 }
-
-expressAppServer.get('*', isProd ? doRender : (req, res) => {
+const __routerRender = isProd ? doRender : (req, res) => {
     serverRendererPromise.then(() => doRender(req, res));
-})
+};
+
+// expressAppServer.use(favicon('./favicon.ico'));
+expressAppServer.use('/', serve('./dist', true));
+expressAppServer.use('/static', serve('./dist/static', true));
+expressAppServer.use('/manifest.json', serve('./dist/vue-ssr-client-manifest.json', true));
+expressAppServer.use('/service-worker.js', serve('./dist/service-worker.js', true));
+
+expressAppServer.get('*', __routerRender);
 
 HttpConf.listen(expressAppServer, httpPort, securePort);
 

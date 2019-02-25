@@ -10,9 +10,10 @@
  * @date 2019.2
  */
 'use strict';
-
+import homepage from "./routers/homepage";
 import hello from "./routers/hello";
 
 export default [
-	hello
+	...homepage,
+	...hello
 ];

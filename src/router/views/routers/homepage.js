@@ -3,7 +3,7 @@
  **********************************************************/
 
 /**
- * VUE Routers - /hello
+ * VUE Routers - /
  * @charset utf-8
  * @author lijun
  * @git: https://github.com/zwlijun/se.vuessr
@@ -14,7 +14,8 @@
 import hello from "@/views/hello/hello";
 
 export default [{
-	"name": "hello",
-	"path": "/hello",
+	"name": "homepage",
+	"path": "/",
+	"alias": "/index",
 	"component": hello
 }];
