@@ -3,8 +3,9 @@ const merge = require('webpack-merge')
 const base = require('./webpack.base.config')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const SWPrecachePlugin = require('sw-precache-webpack-plugin')
+const WorkBoxPlugin = require("workbox-webpack-plugin");
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
+const VUESSRContext = require("../conf/server/context.conf");
 
 const config = merge(base, {
   resolve: process.env.NODE_ENV === 'production' ? {} : {
@@ -23,7 +24,15 @@ const config = merge(base, {
       filename: 'index.html',
       template: 'src/templates/index.render.html'
     }),
-    new VueSSRClientPlugin()
+    new VueSSRClientPlugin(),
+    new WorkBoxPlugin.GenerateSW({
+      swDest: 'service-worker.js',
+      importWorkboxFrom: "local",
+      cacheId: VUESSRContext.service,
+      clientsClaim: true,
+      skipWaiting: true,
+      exclude: [/index\.html$/, /\.map$/]
+    })
   ],
   optimization: {
     splitChunks: {
@@ -54,14 +63,7 @@ const config = merge(base, {
 if (process.env.NODE_ENV === 'production') {
   config.optimization.minimizer.push(
     // minify JS
-    new UglifyJsPlugin(),
-    // auto generate service worker
-    new SWPrecachePlugin({
-      cacheId: 'vue-hn',
-      filename: 'service-worker.js',
-      dontCacheBustUrlsMatching: /./,
-      staticFileGlobsIgnorePatterns: [/index\.html$/, /\.map$/]
-    })
+    new UglifyJsPlugin()
   )
 }
 

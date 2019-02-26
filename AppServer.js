@@ -219,8 +219,6 @@ function doRender(req, res){
 
         ErrorPageConf.process(err, req, res);
     }
-
-    console.log(req.url, req.get("Host"))
     
     const clientInfo = ((req) => {
         let host = req.get("Host");
