@@ -60,6 +60,9 @@ const serverInfo =
     `vue/${require('vue/package.json').version}; ` +
     `vue-server-renderer/${require('vue-server-renderer/package.json').version}`;
 
+const WORKBOX_VERSION = require("workbox-webpack-plugin/package.json").version;
+const WORKBOX_LOCAL_DIR = `workbox-v${WORKBOX_VERSION}`;
+
 console.log("DEBUG MODE: " + debugMode);
 console.log("server: " + serverInfo);
 
@@ -280,6 +283,7 @@ expressAppServer.use('/', serve('./dist', true));
 expressAppServer.use('/static', serve('./dist/static', true));
 expressAppServer.use('/manifest.json', serve('./dist/vue-ssr-client-manifest.json', true));
 expressAppServer.use('/service-worker.js', serve('./dist/service-worker.js', true));
+expressAppServer.use(`/${WORKBOX_LOCAL_DIR}`, serve(`./dist/${WORKBOX_LOCAL_DIR}`));
 
 expressAppServer.get('*', __routerRender);
 
