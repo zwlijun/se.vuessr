@@ -1,5 +1,5 @@
 {
-  "name": "VueSSR-Base",
+  "name": "se.vuessr",
   "version": "1.1.0",
   "private": false,
   "scripts": {
@@ -89,5 +89,23 @@
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
     "webpack-hot-middleware": "^2.24.3"
-  }
+  },
+  "description": "基于Node + Express的VUE SSR基础服务框架\r --\r 相关命令\r --\r ```\r 编绎: npm run ssr:build\r 开发: npm run ssr:dev\r 生产: npm run ssr:start\r ```",
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zwlijun/se.vuessr.git"
+  },
+  "keywords": [
+    "VUE",
+    "VUE-SSR",
+    "SSR",
+    "VUE-SERVER-RENDERER"
+  ],
+  "author": "zwlijun",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zwlijun/se.vuessr/issues"
+  },
+  "homepage": "https://github.com/zwlijun/se.vuessr#readme"
 }
