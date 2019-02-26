@@ -2,17 +2,54 @@
 --
 相关命令
 --
-Build: npm run ssr:build<br />
-Dev: npm run ssr:dev<br />
-Prod: npm run ssr:start
+编绎: npm run ssr:build<br />
+开发: npm run ssr:dev<br />
+生产: npm run ssr:start<br />
 
-测试地址
+Windows启动命令(依赖pm2服务)
 --
-URL: http://localhost:8080
+```
+开发模式：AppServer.bat
+生产模式：AppServer.bat prod
+```
 
-示例
+Linux/Mac OS启动命令(依赖pm2服务)
 --
-URL: http://localhost:8080/hello
+```
+开发模式：./AppServer.sh
+生产模式：./AppServer.sh prod
+```
+
+本地测试地址
+--
+URL: http://localhost:9000
+     https://localhost:9443
+
+如何创建本地SSL证书
+--
+```
+#创建服务器端KEY
+openssl genrsa -des3 -out server.key 1024
+123456
+#移除服务器端KEY验证
+openssl rsa -in server.key -out server.key
+#创建服务器端证书
+openssl req -new -key server.key -out server.csr -config D:/app/openssl-0.9.8h-1-bin/share/openssl.cnf
+
+#创建客户端KEY
+openssl genrsa -des3 -out client.key 1024
+#移除客户端KEY验证
+openssl rsa -in client.key -out client.key
+#创建客户端证书
+openssl req -new -key client.key -out client.csr -config D:/app/openssl-0.9.8h-1-bin/share/openssl.cnf
+
+#创建CA
+openssl req -new -x509 -keyout ca.key -out ca.crt -config D:/app/openssl-0.9.8h-1-bin/share/openssl.cnf
+
+#签名
+openssl ca -in server.csr -out server.crt -cert ca.crt -keyfile ca.key -config D:/app/openssl-0.9.8h-1-bin/share/openssl.cnf 
+openssl ca -in client.csr -out client.crt -cert ca.crt -keyfile ca.key -config D:/app/openssl-0.9.8h-1-bin/share/openssl.cnf
+```
 
 easy-monitor 在Windows无法安装解决方法
 --
