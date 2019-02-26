@@ -25,13 +25,21 @@ const config = merge(base, {
       template: 'src/templates/index.render.html'
     }),
     new VueSSRClientPlugin(),
+    //service worker plugin
+    //@see https://developers.google.cn/web/tools/workbox/modules/workbox-webpack-plugin
     new WorkBoxPlugin.GenerateSW({
       swDest: 'service-worker.js',
       importWorkboxFrom: "local",
       cacheId: VUESSRContext.service,
       clientsClaim: true,
       skipWaiting: true,
-      exclude: [/index\.html$/, /\.map$/]
+      exclude: [/index\.html$/, /\.map$/],
+      runtimeCaching: [
+        {
+          urlPattern: /\.json$/,
+          handler: 'networkFirst'
+        }
+      ]
     })
   ],
   optimization: {
