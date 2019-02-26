@@ -2,9 +2,11 @@
 --
 相关命令
 --
-编绎: npm run ssr:build<br />
-开发: npm run ssr:dev<br />
-生产: npm run ssr:start<br />
+```
+编绎: npm run ssr:build
+开发: npm run ssr:dev
+生产: npm run ssr:start
+```
 
 Windows启动命令(依赖pm2服务)
 --
@@ -22,8 +24,10 @@ Linux/Mac OS启动命令(依赖pm2服务)
 
 本地测试地址
 --
+```
 URL: http://localhost:9000
      https://localhost:9443
+```
 
 如何创建本地SSL证书
 --
