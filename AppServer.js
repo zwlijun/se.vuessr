@@ -271,7 +271,7 @@ function doRender(req, res){
         .on('error', errorHandler)
         .on('end', () => {
             const timing = (Date.now() - s);
-            console.log(`whole request: ${timing}ms`);
+            console.log(`${clientInfo.absoluteURL} -> Server Render: ${timing}ms`);
         }).pipe(res);
 }
 const __routerRender = isProd ? doRender : (req, res) => {

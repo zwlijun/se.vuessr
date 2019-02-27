@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const base = require('./webpack.base.config')
@@ -30,7 +31,13 @@ const config = merge(base, {
     new WorkBoxPlugin.GenerateSW({
       swDest: 'service-worker.js',
       importWorkboxFrom: "local",
-      cacheId: VUESSRContext.service,
+      cacheId: process.env.NODE_ENV === 'production' ? VUESSRContext.service : (function(){
+        const hmac = crypto.createHmac("sha1", VUESSRContext.service);
+        hmac.update("" + Date.now() + "/" + Math.random());
+        const hex_hmac = hmac.digest("hex");
+
+        return VUESSRContext.service + "." + hex_hmac;
+      })(),
       clientsClaim: true,
       skipWaiting: true,
       exclude: [/index\.html$/, /\.map$/],
