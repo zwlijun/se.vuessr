@@ -28,6 +28,9 @@ function CreateApp(index, port){
         "script": "./AppServer.js",
         "instances": "max",
         "interpreter": "node",
+        "max_memory_restart": "500M",
+        "listen_timeout": 10 * 1000,
+        "watch": false,
         "env_dev": {
             "NODE_ENV": "development",
             "PORT": httpPort,
