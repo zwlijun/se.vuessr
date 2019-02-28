@@ -91,7 +91,7 @@
     "webpack-hot-middleware": "^2.24.3",
     "workbox-webpack-plugin": "^3.6.3"
   },
-  "description": "基于Node + Express的VUE SSR基础服务框架\r --\r 相关命令\r --\r ```\r 编绎: npm run ssr:build\r 开发: npm run ssr:dev\r 生产: npm run ssr:start\r ```",
+  "description": "基于Node + Express的VUE SSR基础服务框架",
   "main": ".eslintrc.js",
   "repository": {
     "type": "git",
@@ -101,7 +101,10 @@
     "VUE",
     "VUE-SSR",
     "SSR",
-    "VUE-SERVER-RENDERER"
+    "VUESSR",
+    "VUE-SERVER-RENDERER",
+    "EXPRESS",
+    "WORKBOX"
   ],
   "author": "zwlijun",
   "license": "ISC",
