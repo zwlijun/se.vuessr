@@ -55,16 +55,46 @@ function parse(errorCode){
 	return page || ErrorPages["default"];
 }
 
+function ValidCode(code){
+	if(!code){
+		return 500;
+	}
+
+	var iCode = Number(code);
+
+	if(isNaN(iCode)){
+		return 500;
+	}
+
+	if(iCode <= 100 || iCode > 999){
+		return 500;
+	}
+
+	return iCode;
+}
+
+function log(debugMode, type, err){
+	if(debugMode){
+		console.log("errorpage#" + type + " => ", err);
+	}
+}
+
 module.exports = {
-	process: function(err, req, res){
+	process: function(err, req, res, debugMode){
 		let ex = err || {};
 		let code = err.code;
 
 		if(ex.response){
 			code = ex.response.status;
+			log(debugMode, "response", err);
+		}else if(ex.request){
+			log(debugMode, "request", err);
 		}else if(ex.url){
+			log(debugMode, "redirect", err);
 			res.redirect(301, ex.url);
 			return ;
+		}else{
+			log(debugMode, "other", err);
 		}
 
 		let page = parse(String(code));
@@ -74,10 +104,10 @@ module.exports = {
 				res.redirect(301, page.value);
 				return ;
 			}else{
-				res.status(code || 500).send(page.value);
+				res.status(ValidCode(code)).send(page.value);
 			}
 		}else{
-			res.sendStatus(500);
+			res.sendStatus(ValidCode());
 		}
 	}
 };

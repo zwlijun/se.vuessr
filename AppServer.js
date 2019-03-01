@@ -220,7 +220,7 @@ function doRender(req, res){
             console.log("errorHandler => ", err);
         }
 
-        ErrorPageConf.process(err, req, res);
+        ErrorPageConf.process(err, req, res, debugMode);
     }
     
     const clientInfo = ((req) => {
