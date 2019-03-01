@@ -15,7 +15,8 @@
 const ErrorPages = {
 	"default": {
 		"type": "text",
-		"value": "500 | Internal Server Error"
+		"value": "500 | Internal Server Error",
+		"code": 500
 	},
 	"401": {
 		"type": "redirect",
@@ -28,10 +29,23 @@ const ErrorPages = {
 	},
 	"500": "default",
 	"4xx": "default",
-	"5xx": "default"
+	"5xx": "default",
+	"504": {
+		"type": "text",
+		"value": "504 | Gateway Timeout"
+	},
+	"408": {
+		"type": "text",
+		"value": "408 | Request Timeout"
+	}
 };
 
 function parse(errorCode){
+	if(undefined === errorCode || null === errorCode){
+		errorCode = "";
+	}
+	errorCode = ("" + errorCode);
+
 	let page = null;
 
 	if(errorCode in ErrorPages){
@@ -52,6 +66,10 @@ function parse(errorCode){
 		}
 	}
 
+	if(page){
+		page["code"] = ValidCode(errorCode);
+	}
+
 	return page || ErrorPages["default"];
 }
 
@@ -60,7 +78,7 @@ function ValidCode(code){
 		return 500;
 	}
 
-	var iCode = Number(code);
+	let iCode = Number(code);
 
 	if(isNaN(iCode)){
 		return 500;
@@ -86,28 +104,49 @@ module.exports = {
 
 		if(ex.response){
 			code = ex.response.status;
-			log(debugMode, "response", err);
+			log(debugMode, "response -> " + req.url, err);
 		}else if(ex.request){
-			log(debugMode, "request", err);
+			if("ECONNABORTED" == code){
+				code = 408;
+			}
+			log(debugMode, "request -> " + req.url, err);
 		}else if(ex.url){
-			log(debugMode, "redirect", err);
+			log(debugMode, "redirect -> " + req.url, err);
 			res.redirect(301, ex.url);
 			return ;
 		}else{
-			log(debugMode, "other", err);
+			log(debugMode, "other -> " + req.url, err);
 		}
 
-		let page = parse(String(code));
+		let page = parse(code);
 
 		if(null !== page){
 			if("redirect" == page.type){
 				res.redirect(301, page.value);
 				return ;
 			}else{
-				res.status(ValidCode(code)).send(page.value);
+				res.status(page.code).send(page.value);
 			}
 		}else{
 			res.sendStatus(ValidCode());
 		}
+	},
+	timeout: function(req, res, debugMode){
+		let isInterrupt = false;
+		let page = parse(504);
+
+		if("redirect" == page.type){
+			res.redirect(302, page.value);
+			return true;
+		}else{
+			res.status(page.code);
+		}
+
+		//如果返回 true 则会中断流程执行并调用 res.end() ==> true :: res.end();
+		if(true === isInterrupt){
+			res.end(page.value);
+		}
+
+		return isInterrupt;
 	}
 };

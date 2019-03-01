@@ -47,13 +47,13 @@ const HttpConf = require("./conf/server/http.conf");
 const resolve = file => path.resolve(__dirname, file);
 
 const debugMode = process.env.DEBUG === "true";
+const isProd = process.env.NODE_ENV === 'production';
 
 const DEFAULT_SECURE_PORT = 0;
 const DEFAULT_HTTP_PORT = 0;
 const securePort = process.env.SECURE || DEFAULT_SECURE_PORT;
 const httpPort = process.env.PORT || DEFAULT_HTTP_PORT;
 
-const isProd = process.env.NODE_ENV === 'production';
 const serverInfo =
     `env/${process.env.NODE_ENV}; ` + 
     `express/${require('express/package.json').version}; ` +
@@ -129,7 +129,9 @@ const JSONBodyParser = bodyParser.json();
 // create application/x-www-form-urlencoded parser
 const URLEncodedBodyParser = bodyParser.urlencoded({ extended: false });
 
-expressAppServer.use(connectTimeout("30s"));
+expressAppServer.use(connectTimeout("30s", {
+    "respond": false
+}));
 expressAppServer.use(connectRID({
     "headerName": "X-Connect-RID"
 }));
@@ -213,13 +215,18 @@ function doRender(req, res){
     res.setHeader("Content-Type", "text/html");
     res.setHeader("X-Server-Info", serverInfo);
 
+    //检测是否超时
+    if(true === req.timedout){
+        const isInterrupt =  ErrorPageConf.timeout(req, res, debugMode);
+
+        if(true === isInterrupt){
+            return ;
+        }
+    }
+
     const useHTTPS = (securePort > 0 && true === HttpConf.forceSecure && "http" === req.protocol);
 
     const errorHandler = err => {
-        if(debugMode){
-            console.log("errorHandler => ", err);
-        }
-
         ErrorPageConf.process(err, req, res, debugMode);
     }
     
