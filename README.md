@@ -1,5 +1,12 @@
 基于Node + Express的VUE SSR基础服务框架
 --
+
+安装
+--
+```
+npm install se.vuessr
+```
+
 相关命令
 --
 ```
