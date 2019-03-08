@@ -37,17 +37,21 @@ const LRUCache = require('lru-cache');
 const VUEServerRender = require('vue-server-renderer');
 const proxy = require('http-proxy-middleware');
 const jsonMerger = require("json-merger");
+const URL = require('url');
 //-------------------------------------------
 const VUESSRContext = require("./conf/server/context.conf");
 const ProxyServiceConf = require("./conf/server/proxy.conf");
 const ErrorPageConf = require("./conf/server/errorpage.conf");
-const HttpConf = require("./conf/server/http.conf");
+const Http1Conf = require("./conf/server/http.conf");
+const Http2Conf = require("./conf/server/http2.conf");
 //-------------------------------------------
 
 const resolve = file => path.resolve(__dirname, file);
 
 const debugMode = process.env.DEBUG === "true";
 const isProd = process.env.NODE_ENV === 'production';
+const useHTTP2 = process.env.HTTP2 === "true";
+const HttpConf = useHTTP2 ? Http2Conf : Http1Conf;
 
 const DEFAULT_SECURE_PORT = 0;
 const DEFAULT_HTTP_PORT = 0;
@@ -65,6 +69,7 @@ const WORKBOX_LOCAL_DIR = `workbox-v${WORKBOX_VERSION}`;
 
 console.log("DEBUG MODE: " + debugMode);
 console.log("server: " + serverInfo);
+console.log("HTTP2: " + useHTTP2);
 
 const lurCacheOptions = new LRUCache({
     max: 1000,
@@ -292,7 +297,14 @@ expressAppServer.use('/manifest.json', serve('./dist/vue-ssr-client-manifest.jso
 expressAppServer.use('/service-worker.js', serve('./dist/service-worker.js', true));
 expressAppServer.use(`/${WORKBOX_LOCAL_DIR}`, serve(`./dist/${WORKBOX_LOCAL_DIR}`));
 
+expressAppServer.get('/http2', (req, res) => {
+    res.setHeader("Content-Type", "text/html");
+    res.send("hello http2");
+    res.end()
+});
+
 expressAppServer.get('*', __routerRender);
+
 
 HttpConf.listen(expressAppServer, httpPort, securePort);
 

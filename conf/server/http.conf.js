@@ -44,9 +44,9 @@ function httpSecureEvent(httpServer){
 }
 
 function createHttpServer(expressAppServer, port){
-	const httpServer = http.createServer(expressAppServer);
-
 	if(port && port > 0){
+		const httpServer = http.createServer(expressAppServer);
+		
 		createServer(httpServer, port, "http");
 	}else{
 		console.log(`HTTP server port(${port}) is invalid.`)

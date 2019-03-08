@@ -1,6 +1,6 @@
 {
   "name": "se.vuessr",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -8,8 +8,8 @@
     "lint": "vue-cli-service lint",
     "test:e2e": "vue-cli-service test:e2e",
     "test:unit": "vue-cli-service test:unit",
-    "ssr:dev": "cross-env NODE_ENV=development PORT=9000 SECURE=9443 DEBUG=true node AppServer",
-    "ssr:start": "cross-env NODE_ENV=production PORT=9000 SECURE=9443 DEBUG=false node AppServer",
+    "ssr:dev": "cross-env NODE_ENV=development PORT=9000 SECURE=9443 HTTP2=true DEBUG=true node AppServer",
+    "ssr:start": "cross-env NODE_ENV=production PORT=9000 SECURE=9443 HTTP2=true DEBUG=false node AppServer",
     "ssr:build": "rimraf dist && npm run ssr:build:client && npm run ssr:build:server",
     "ssr:build:client": "cross-env NODE_ENV=production webpack --config build/webpack.client.config.js --progress --hide-modules",
     "ssr:build:server": "cross-env NODE_ENV=production webpack --config build/webpack.server.config.js --progress --hide-modules"
@@ -39,6 +39,7 @@
     "serve-favicon": "^2.5.0",
     "serve-static": "^1.13.2",
     "session": "^0.1.0",
+    "spdy": "^4.0.0",
     "timeout": "^0.2.1",
     "vue": "^2.6.4",
     "vue-localstorage": "^0.6.2",
@@ -104,7 +105,9 @@
     "VUESSR",
     "VUE-SERVER-RENDERER",
     "EXPRESS",
-    "WORKBOX"
+    "WORKBOX",
+    "HTTP2",
+    "SPDY"
   ],
   "author": "zwlijun",
   "license": "ISC",

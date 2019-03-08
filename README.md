@@ -83,9 +83,16 @@ Nginx配置示例参考
         server 127.0.0.1:9000;
     }
 
+    upstream node_appserver_ssl {
+        server 127.0.0.1:9443;
+    }
+
     server {
         listen       9080;
         server_name  localhost;
+
+        #强制到HTTPS
+        return 301 https://$host:9083$request_uri;
 
         root D:/projects/se.vuessr/dist;
 
@@ -111,11 +118,75 @@ Nginx配置示例参考
         }
 
         location / {
-            proxy_next_upstream     http_502 http_504 error timeout invalid_header;
-            proxy_pass              http://node_appserver;
-            proxy_set_header        Host            $http_host;  
-            proxy_set_header        X-Real-IP       $remote_addr; 
-            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for; 
+            proxy_ignore_client_abort   on; 
+            proxy_send_timeout          120;
+            proxy_connect_timeout       120;
+            proxy_read_timeout          120;
+            proxy_buffering             on;
+            proxy_buffer_size           32k;
+            proxy_buffers               8 32k;
+            proxy_busy_buffers_size     64k;
+            proxy_next_upstream         http_502 http_504 error timeout invalid_header;
+            proxy_pass                  http://node_appserver;
+            proxy_set_header            Host            $http_host;  
+            proxy_set_header            X-Real-IP       $remote_addr; 
+            proxy_set_header            X-Forwarded-For $proxy_add_x_forwarded_for; 
+            break;
+        }
+    }
+
+    server {
+        listen       9083 ssl http2; # 开启http2
+        server_name  localhost;
+
+        ssl on;
+
+        ssl_certificate      D:/projects/se.vuessr/conf/server/ssl/server.crt;
+        ssl_certificate_key  D:/projects/se.vuessr/conf/server/ssl/server.key;
+
+        #ssl_session_cache    shared:SSL:1m;
+        #ssl_session_timeout  5m;
+
+        #ssl_ciphers  HIGH:!aNULL:!MD5;
+        #ssl_prefer_server_ciphers  on;
+
+        root D:/projects/se.vuessr/dist;
+
+        location ~* \.(gif|jpg|jpeg|png|bmp|swf|svg|eot|ttf|woff)$ {
+            expires 7d;
+            break;
+        }
+        location ~* \.(css)$ {
+            expires 3d;
+            break;
+        }
+        location ~* \.(js)$ {
+            expires 3d;
+            break;
+        }
+        location = /manifest.json {
+            try_files $uri $uri /vue-ssr-client-manifest.json = 200;
+            break;
+        }
+        location ~* \.(json)$ {
+            expires 15m;
+            break;
+        }
+
+        location / {
+            proxy_ignore_client_abort   on; 
+            proxy_send_timeout          120;
+            proxy_connect_timeout       120;
+            proxy_read_timeout          120;
+            proxy_buffering             on;
+            proxy_buffer_size           32k;
+            proxy_buffers               8 32k;
+            proxy_busy_buffers_size     64k;
+            proxy_next_upstream         http_502 http_504 error timeout invalid_header;
+            proxy_pass                  https://node_appserver_ssl;
+            proxy_set_header            Host            $http_host;  
+            proxy_set_header            X-Real-IP       $remote_addr; 
+            proxy_set_header            X-Forwarded-For $proxy_add_x_forwarded_for; 
             break;
         }
     }
