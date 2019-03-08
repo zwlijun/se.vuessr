@@ -297,12 +297,6 @@ expressAppServer.use('/manifest.json', serve('./dist/vue-ssr-client-manifest.jso
 expressAppServer.use('/service-worker.js', serve('./dist/service-worker.js', true));
 expressAppServer.use(`/${WORKBOX_LOCAL_DIR}`, serve(`./dist/${WORKBOX_LOCAL_DIR}`));
 
-expressAppServer.get('/http2', (req, res) => {
-    res.setHeader("Content-Type", "text/html");
-    res.send("hello http2");
-    res.end()
-});
-
 expressAppServer.get('*', __routerRender);
 
 
