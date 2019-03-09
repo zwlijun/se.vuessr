@@ -1,6 +1,6 @@
 {
   "name": "se.vuessr",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -92,7 +92,7 @@
     "webpack-hot-middleware": "^2.24.3",
     "workbox-webpack-plugin": "^3.6.3"
   },
-  "description": "基于Node + Express的VUE SSR基础服务框架",
+  "description": "VUE SSR基础服务框架 - VUE / VUEX / SSR / NODE / EXPRESS / HTTP2 / SPDY",
   "main": ".eslintrc.js",
   "repository": {
     "type": "git",
@@ -110,7 +110,7 @@
     "SPDY"
   ],
   "author": "zwlijun",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/zwlijun/se.vuessr/issues"
   },
