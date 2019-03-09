@@ -8,7 +8,6 @@
  * @author lijun
  * @git: https://github.com/zwlijun/se.vuessr
  * @date 2019.2
- * @see https://www.npmjs.com/package/http-proxy-middleware#context-matching
  */
 'use strict';
 
