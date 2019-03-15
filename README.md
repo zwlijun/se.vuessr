@@ -1,10 +1,13 @@
 基于Node + Express的VUE SSR基础服务框架
 --
 
-安装
+下载 & 安装
 --
 ```
-npm install se.vuessr
+1. npm repo se.vuessr OR https://github.com/zwlijun/se.vuessr
+2. <github> [Clone or download]
+3. cd <se.vuessr dir>
+4. npm install
 ```
 
 相关命令
