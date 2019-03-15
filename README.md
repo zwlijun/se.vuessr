@@ -4,6 +4,10 @@
 下载 & 安装
 --
 ```
+1. npm pack se.vuessr
+2.1 Linux/Mac OS: tar -zvxf se.vuessr-1.3.0.tgz && mv package se.vuessr
+2.2 Windows: https://www.7-zip.org/
+===OR===
 1. <npm repo se.vuessr> OR <https://github.com/zwlijun/se.vuessr>
 2. <github> [Clone or download]
 3. cd <se.vuessr dir>
