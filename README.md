@@ -4,7 +4,7 @@
 下载 & 安装
 --
 ```
-1. npm repo se.vuessr OR https://github.com/zwlijun/se.vuessr
+1. <npm repo se.vuessr> OR <https://github.com/zwlijun/se.vuessr>
 2. <github> [Clone or download]
 3. cd <se.vuessr dir>
 4. npm install
