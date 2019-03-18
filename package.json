@@ -1,6 +1,6 @@
 {
   "name": "se.vuessr",
-  "version": "1.3.0",
+  "version": "1.3.2",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -90,7 +90,7 @@
     "webpack-cli": "^3.2.3",
     "webpack-dev-middleware": "^3.6.1",
     "webpack-hot-middleware": "^2.24.3",
-    "workbox-webpack-plugin": "^3.6.3"
+    "workbox-webpack-plugin": "^4.1.1"
   },
   "description": "VUE SSR基础服务框架 - VUE / VUEX / SSR / NODE / EXPRESS / HTTP2 / SPDY",
   "main": ".eslintrc.js",

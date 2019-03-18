@@ -44,7 +44,16 @@ const config = merge(base, {
       runtimeCaching: [
         {
           urlPattern: /\.json$/,
-          handler: 'networkFirst'
+          handler: 'StaleWhileRevalidate',
+          "options": {
+            "cacheName": "JSON-CONF",
+            "fetchOptions": {
+              "mode": "cors"
+            },
+            "cacheableResponse": {
+              "statuses": [0, 200]
+            }
+          }
         }
       ]
     })
