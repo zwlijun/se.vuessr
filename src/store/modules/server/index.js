@@ -46,5 +46,34 @@ export default {
             state.ogp = Object.assign((state.ogp || {}), payload);
             state.ogpMeta = OGP(state.ogp);
         }
+    },
+    getters: {
+        absoluteURL: (state) => {
+            const client = state.client || {};
+            const url = client.absoluteURL || (document && document.URL);
+
+            return url;
+        },
+        serverInfo: (state) => {
+            return state.server || "VUE SPA";
+        },
+        seo: (state) => {
+            return state.seo;
+        },
+        seoMeta: (state) => {
+            return state.seoMeta;
+        },
+        ogp: (state) => {
+            return state.ogp;
+        },
+        ogpMeta: (state) => {
+            return state.ogpMeta;
+        },
+        meta: (state) => {
+            return state.meta;
+        },
+        title: (state) => {
+            return state.title;
+        }
     }
 };

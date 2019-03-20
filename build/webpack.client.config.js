@@ -23,7 +23,12 @@ const config = merge(base, {
     // generate output HTML
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'src/templates/index.render.html'
+      template: 'src/templates/index.client.html',
+      inject: true
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'server.html',
+      template: 'src/templates/index.server.html'
     }),
     new VueSSRClientPlugin(),
     //service worker plugin
@@ -40,7 +45,7 @@ const config = merge(base, {
       })(),
       clientsClaim: true,
       skipWaiting: true,
-      exclude: [/index\.html$/, /\.map$/],
+      exclude: [/server\.html$/, /\.map$/],
       runtimeCaching: [
         {
           urlPattern: /\.json$/,

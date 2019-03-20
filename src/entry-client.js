@@ -23,6 +23,14 @@ const { app, router, store } = createVueApp()
 // the state is determined during SSR and inlined in the page markup.
 if (window.__INITIAL_STATE__) {
   store.replaceState(window.__INITIAL_STATE__)
+}else{
+  const matchedComponents = router.getMatchedComponents()
+  // no matched routes
+  if (matchedComponents.length) {
+      Promise.all(matchedComponents.map(({ asyncData }) => asyncData && asyncData({store}))).then(() => {
+        //@TODO
+      }).catch()
+  }
 }
 
 router.onReady(() => {
@@ -57,7 +65,7 @@ router.onReady(() => {
   })
 
   // actually mount to DOM
-  app.$mount('#app')
+  app.$mount('#app', true)
 })
 
 // service worker

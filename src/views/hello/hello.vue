@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Hello, world</h1>
-    <p>build by <cite>{{this.$store.state.server.server}}</cite></p>
+    <p>build by <cite>{{this.$store.getters["server/serverInfo"]}}</cite></p>
     <p>Server Response: <strong>{{text}}</strong></p>
   </div>
 </template>
@@ -21,33 +21,36 @@ cite{
             return this.title;
         },
         seo(){
-            return {
-                "keywords": "hello, world",
-                "description": "test"
-            }
+            return this.seo;
         },
         ogp(){
-            return {
-                "og:url"         : this.$store.state.server.client.absoluteURL,
-                "og:title"       : "VUE SSR Base - Hello world",
-                "og:type"        : "website",
-                "og:image"       : "",
-                "og:description" : "SE.VUESSR - VUE SSR Base - Hello world",
-                "og:site_name"   : "SE.VUESSR"
-            }
+            return this.ogp;
         },
         meta(){
-            return [
-                {
-                  "name": "q2",
-                  "content": "test",
-                  "data-alias": "ssr"
-                }
-            ]
+            return this.meta;
         },
         data(){
             return {
-                "title": "Hello VUE SSR"
+                "title": "Hello VUE SSR - CLIENT",
+                "seo": {
+                    "keywords": "hello, world",
+                    "description": "test"
+                },
+                "ogp": {
+                    "og:url"         : this.$store.getters["server/absoluteURL"],
+                    "og:title"       : "VUE SSR Base - Hello world",
+                    "og:type"        : "website",
+                    "og:image"       : "",
+                    "og:description" : "SE.VUESSR - VUE SSR Base - Hello world",
+                    "og:site_name"   : "SE.VUESSR"
+                },
+                "meta": [
+                    {
+                      "name": "q2",
+                      "content": "test",
+                      "data-alias": "ssr"
+                    }
+                ]
             }
         },
         beforeCreate(){
@@ -61,7 +64,6 @@ cite{
         },
         mounted(){
             //@todo
-            
         },
         beforeUpdate(){
             //@todo
@@ -80,7 +82,7 @@ cite{
         },
         computed: {
             text(){
-                return this.$store.state.hello.text;
+                return this.$store.getters["hello/text"];
             }
         },
         methods: {

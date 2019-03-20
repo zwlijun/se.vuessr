@@ -64,7 +64,7 @@ const serverMixin = {
 const clientMixin = {
 	mounted(){
 		const meta = getContent(this);
-
+		
 		if(meta){
 			this.$store.commit("server/meta", parseMeta(meta));
 		}

@@ -41,5 +41,10 @@ export default {
 
             return result;
         }
+    },
+    getters: {
+        text: (state) => {
+            return state.text || "No data.";
+        }
     }
 };
