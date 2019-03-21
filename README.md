@@ -83,17 +83,17 @@ npm install node-pre-gyp -g
 2. 如果还是不行，检查Python的版本号，Python用windows-build-tools中的Python(2.7)就可以了。如果之前有安装过其他的版本，把系统环境变量path中的Python配置改成window-build-tools中Python中执行路径就可以了。
 
 
-Nginx配置示例参考
+Nginx配置示例参考(SSR服务超时降级SPA模式)
 --
 ```
     upstream node_appserver {
-        server 127.0.0.1:9000  weight=5;  #SSR
-        server 127.0.0.1:10080 weight=1;  #SPA
+        server 127.0.0.1:9000  weight=5 max_fails=2 fail_timeout=900s;  #SSR
+        server 127.0.0.1:10080 weight=1 max_fails=2 fail_timeout=900s;  #SPA
     }
 
     upstream node_appserver_ssl {
-        server 127.0.0.1:9443  weight=5;  #SSR
-        server 127.0.0.1:10443 weight=1;  #SPA
+        server 127.0.0.1:9443  weight=5 max_fails=2 fail_timeout=900s;  #SSR
+        server 127.0.0.1:10443 weight=1 max_fails=2 fail_timeout=900s;  #SPA
     }
 
     server {
@@ -128,9 +128,9 @@ Nginx配置示例参考
 
         location / {
             proxy_ignore_client_abort   on; 
-            proxy_send_timeout          120;
-            proxy_connect_timeout       120;
-            proxy_read_timeout          120;
+            proxy_send_timeout          15;
+            proxy_connect_timeout       15;
+            proxy_read_timeout          15;
             proxy_buffering             on;
             proxy_buffer_size           32k;
             proxy_buffers               8 32k;
@@ -184,9 +184,9 @@ Nginx配置示例参考
 
         location / {
             proxy_ignore_client_abort   on; 
-            proxy_send_timeout          120;
-            proxy_connect_timeout       120;
-            proxy_read_timeout          120;
+            proxy_send_timeout          15;
+            proxy_connect_timeout       15;
+            proxy_read_timeout          15;
             proxy_buffering             on;
             proxy_buffer_size           32k;
             proxy_buffers               8 32k;
