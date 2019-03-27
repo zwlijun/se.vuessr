@@ -13,9 +13,9 @@ cite{
 <script>
     //@import
     import {mapActions} from "vuex";
-    import {title, seo, ogp, meta} from "~lib/mixins/index";
+    import {title, seo, ogp, meta, LIFECYCLE_HOOKS} from "~lib/mixins/index";
     export default {
-        mixins: [title, seo, ogp, meta],
+        mixins: [title, seo, ogp, meta, LIFECYCLE_HOOKS],
         components: {},
         title(){
             return this.title;
@@ -52,30 +52,6 @@ cite{
                     }
                 ]
             }
-        },
-        beforeCreate(){
-            //@todo
-        },
-        created(){
-            //@todo            
-        },
-        beforeMount(){
-            //@todo
-        },
-        mounted(){
-            //@todo
-        },
-        beforeUpdate(){
-            //@todo
-        },
-        updated(){
-            //@todo
-        },
-        beforeDestroy(){
-            //@todo
-        },
-        destroyed(){
-            //@todo
         },
         asyncData({store, route}){
             return store.dispatch("hello/read");

@@ -15,10 +15,12 @@ import title from "./title";
 import ogp from "./ogp";
 import seo from "./seo";
 import meta from "./meta";
+import LIFECYCLE_HOOKS from "./lifecycle_hooks";
 
 export {
 	title,
 	ogp,
 	seo,
-	meta
+	meta,
+	LIFECYCLE_HOOKS
 };
