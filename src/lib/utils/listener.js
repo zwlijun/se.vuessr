@@ -11,7 +11,7 @@
  */
 'use strict';
 
-const equals = require("./equals");
+import equals from "./equals";
 
 class Listener{
     _handlers = {};
@@ -174,3 +174,6 @@ class Listener{
         }
     }
 }
+
+
+export default Listener;
