@@ -62,8 +62,7 @@ export default const {
         for(let key in b){
             if(b.hasOwnProperty(key)){
                 if(key in a){
-                    // 规避null和undefined的值
-                    if(Object.values(b[key] || 0).length === 0 || Object.values(a[key] || 0).length === 0){
+                    if(Object.isFrozen(b[key]) || Object.isFrozen(a[key]) || Object.values(b[key] || 0).length === 0 || Object.values(a[key] || 0).length === 0){
                         x[key] = b[key];
                     }else{
                         if(Array.isArray(b[key])){
