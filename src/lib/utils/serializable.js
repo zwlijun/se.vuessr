@@ -12,6 +12,11 @@
 'use strict';
 
 export default const {
+    /**
+     * 生成唯一ID
+     * @param {[type]} len   长度
+     * @param {[type]} radix 进制
+     */
     UUID: function(len, radix){
         const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
         let uuid = [], i;
@@ -42,6 +47,12 @@ export default const {
  
         return uuid.join('');
     },
+    /**
+     * Object.assign() 的深度访问实现
+     * 方法用于将所有可枚举属性的值从一个或多个源对象复制到目标对象。它将返回目标对象。
+     * @param  {...[type]} args [description]
+     * @return {[type]}         [description]
+     */
     assign: function(...args){
         let items = Array.from(arguments);
         let size = items.length;
