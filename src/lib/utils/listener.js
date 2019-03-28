@@ -12,6 +12,7 @@
 'use strict';
 
 import equals from "./equals";
+import Handler from "./handler";
 
 class Listener{
     _handlers = {};
@@ -34,28 +35,7 @@ class Listener{
      * @return {[type]}         [description]
      */
     createHandler(handler){
-        let _handler = null;
-
-        if(Object.isFrozen(handler)){
-            return _handler;
-        }
-
-        let def = {
-            "callback": null,
-            "args": [],
-            "context": null
-        };
-
-        try{
-            Object.seal(def);
-            Object.assign(def, handler);
-
-            _handler = def;
-        }catch(e){
-            _handler = null;
-        }
-
-        return _handler;
+        return Handler.createHandler(handler);
     }
 
     /**
@@ -96,8 +76,8 @@ class Listener{
      */
     add(eventType, handler){
         const key = "on" + eventType;
-        const conf = this.handlers;
-        const _handler = null;
+        let conf = this.handlers;
+        let _handler = null;
 
         if(null !== (_handler = this.createHandler(handler)) && !this.existed(eventType, handler)){
             conf[key].push(handler);
@@ -114,22 +94,23 @@ class Listener{
      */
     remove(eventType, handler){
         const key = "on" + eventType;
-        const conf = this.handlers;
-        const _handler = this.createHandler(handler);
+        let conf = this.handlers;
+        let _handler = this.createHandler(handler);
 
         if(key in conf){
             if(!_handler){
                 delete this._handlers[key];
                 this._handlers[key] = null;
             }else{
-                const items = conf[key] || [];
-                const size = items.length;
-                for(let i = 0; i < size; i++){
+                let items = [].concat(conf[key] || []);
+
+                for(let i = items.length - 1; i >= 0; i--){
                     if(equals(_handler, items[i])){
-                        this._handlers[key].splice(i, 1);
-                        break;
+                        items.splice(i, 1);
                     }
                 }
+
+                this._handlers[key] = items
             }
         }
     }
@@ -141,20 +122,7 @@ class Listener{
      * @return {[type]}         [description]
      */
     execHandler(handler, args){
-        const _args = [].concat(args || []);
-        const _handler = this.createHandler(handler);
-
-        if(_handler){
-            const $callback = _handler.callback || null;
-            const $args = _args.concat(_handler.args || []);
-            const $context = _handler.context || null;
-
-            if($callback && $callback.apply){
-                return $callback.apply($context, $args);
-            }
-        }
-
-        return undefined;
+        return Handler.execHandler(handler, args);
     }
 
     /**
@@ -165,13 +133,16 @@ class Listener{
      */
     exec(eventType, args){
         const key = "on" + eventType;
-        const conf = this.handlers;
-        const items = conf[key] || [];
-        const size = items.length;
+        let conf = this.handlers;
+        let items = conf[key] || [];
+        let size = items.length;
 
+        let results = [];
         for(let i = 0; i < size; i++){
-            this.execHandler(items[i], args)
+            results.push(this.execHandler(items[i], args))
         }
+
+        return results;
     }
 }
 
