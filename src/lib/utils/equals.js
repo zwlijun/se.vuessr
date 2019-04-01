@@ -12,6 +12,12 @@
 'use strict';
 
 function dataType(obj){
+    if(isHTMLElement(obj)){
+        return "node";
+    }else if(isHTMLElementCollection(obj)){
+        return "nodelist";
+    }
+
     let str = Object.prototype.toString.call(obj);
     let type = (str.substring(str.indexOf(" ") + 1, str.indexOf("]"))).toLowerCase();
 
@@ -19,18 +25,11 @@ function dataType(obj){
 }
 
 function isHTMLElement(obj){
-    let type = dataType(obj);
-    let pattern = /^HTML[a-z]+Element$/i;
+    return obj instanceof Node;
+}
 
-    if(!pattern.test(type)){
-        return false;
-    }
-
-    if(obj.nodeType && 1 === obj.nodeType && obj.outerHTML){
-        return true;
-    }
-
-    return false;
+function isHTMLElementCollection(obj){
+    return obj instanceof NodeList;
 }
 
 function str(obj){
@@ -81,6 +80,30 @@ function obj(o0, o1){
     return true;
 }
 
+function nodes(o0, o1){
+    //todo
+    let s0 = o0.length;
+    let s1 = o1.length;
+
+    if(s0 !== s1){
+        return false;
+    }
+
+    let n0 = null;
+    let n1 = null;
+
+    for(let i = 0; i < s0; i++){
+        n0 = s0[i];
+        n1 = s1[i];
+
+        if(n0.outerHTML !== n1.outerHTML){
+            return false;
+        }
+    }
+
+    return true;
+}
+
 function equals(obj1, obj2){
     if(obj1 === obj2){
         return true;
@@ -93,13 +116,10 @@ function equals(obj1, obj2){
         return false;
     }
 
-    if(isHTMLElement(obj1)){
-        type1 = "element";
-    }
-
     switch(type1){
         case "regexp":
         case "string":
+        case "text":
             return str(obj1) === str(obj2);
         case "boolean":
             return bool(obj1) === bool(obj2);
@@ -107,12 +127,14 @@ function equals(obj1, obj2){
             return num(obj1) === num(obj2);
         case "date":
             return +obj1 === +obj2;
-        case "element":
-            return obj1.outerHTML === obj2.outerHTML;
         case "function":
             return func(obj1) === func(obj2);
         case "array":
             return arr(obj1, obj2);
+        case "node":
+            return obj1.outerHTML === obj2.outerHTML;
+        case "nodelist":
+            return nodes(obj1, obj2);
         case "object":
             return obj(obj1, obj2);
     }

@@ -11,6 +11,27 @@
  */
 'use strict';
 
+function isHTMLElement(obj){
+    return obj instanceof Node;
+}
+
+function isHTMLElementCollection(obj){
+    return obj instanceof NodeList;
+}
+
+function isDirectAssignmentVariable(v){
+    if(Object.isFrozen(v) 
+        || Object.values(v || 0).length === 0 
+            || Array.isArray(v) 
+                || isHTMLElement(v) 
+                    || isHTMLElementCollection(v)){
+        //TODO
+        return true;
+    }
+
+    return false;
+}
+
 export default const {
     /**
      * 生成唯一ID
@@ -73,14 +94,10 @@ export default const {
         for(let key in b){
             if(b.hasOwnProperty(key)){
                 if(key in a){
-                    if(Object.isFrozen(b[key]) || Object.isFrozen(a[key]) || Object.values(b[key] || 0).length === 0 || Object.values(a[key] || 0).length === 0){
+                    if(isDirectAssignmentVariable(b[key]) || isDirectAssignmentVariable(a[key])){
                         x[key] = b[key];
                     }else{
-                        if(Array.isArray(b[key])){
-                            x[key] = b[key];
-                        }else{
-                            x[key] = this.assign.apply(this, [a[key], b[key]]);
-                        }
+                        x[key] = this.assign.apply(this, [a[key], b[key]]);
                     }
                 }else{
                     x[key] = b[key];
