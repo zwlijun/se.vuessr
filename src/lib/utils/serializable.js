@@ -11,27 +11,6 @@
  */
 'use strict';
 
-function isHTMLElement(obj){
-    return obj instanceof Node;
-}
-
-function isHTMLElementCollection(obj){
-    return obj instanceof NodeList;
-}
-
-function isDirectAssignmentVariable(v){
-    if(Object.isFrozen(v) 
-        || Object.values(v || 0).length === 0 
-            || Array.isArray(v) 
-                || isHTMLElement(v) 
-                    || isHTMLElementCollection(v)){
-        //TODO
-        return true;
-    }
-
-    return false;
-}
-
 export default const {
     /**
      * 生成唯一ID
@@ -67,49 +46,5 @@ export default const {
         }
  
         return uuid.join('');
-    },
-    /**
-     * Object.assign() 的深度访问实现
-     * 方法用于将所有可枚举属性的值从一个或多个源对象复制到目标对象。它将返回目标对象。
-     * @param  {...[type]} args [description]
-     * @return {[type]}         [description]
-     */
-    assign: function(...args){
-        let items = Array.from(arguments);
-        let size = items.length;
-
-        if(size === 0){
-            return {};
-        }
-
-        if(size == 1){
-            return items[0] || {};
-        }
-
-        let a = items.shift();
-        let b = items.shift();
-
-        let x = Object.assign({}, a);
-
-        for(let key in b){
-            if(b.hasOwnProperty(key)){
-                if(key in a){
-                    if(isDirectAssignmentVariable(b[key]) || isDirectAssignmentVariable(a[key])){
-                        x[key] = b[key];
-                    }else{
-                        x[key] = this.assign.apply(this, [a[key], b[key]]);
-                    }
-                }else{
-                    x[key] = b[key];
-                }
-            }
-        }
-
-        if(size > 2){
-            items.unshift(x);
-            x = this.assign.apply(this, items);
-        }
-
-        return x;
     }
 };
