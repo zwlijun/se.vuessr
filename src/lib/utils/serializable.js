@@ -54,11 +54,11 @@ export default const {
      * @return {[type]}          [description]
      */
     random: function(minValue, maxValue){
-        const rnd = (Math.random() * (maxValue - minValue)) + min;
+        const rnd = (Math.random() * (maxValue - minValue)) + minValue;
 
         const ret = {
             intValue: Math.floor(rnd),
-            floatValue: rnd;
+            floatValue: rnd
         };
 
         return ret;
