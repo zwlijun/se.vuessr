@@ -4,14 +4,13 @@
 下载 & 安装
 --
 ```
-1. npm pack se.vuessr
-2.1 Linux/Mac OS: tar -zvxf se.vuessr-<VERSION>.tgz && mv package <se.vuessr>
-2.2 Windows: https://www.7-zip.org/
-===OR===
-1. <npm repo se.vuessr> OR <https://github.com/zwlijun/se.vuessr>
-2. <github> [Clone or download]
-3. cd <se.vuessr dir>
-4. npm install
+1. Install se.vuessr command-line tool
+   npm install se.vuessr-cli -g
+2. Initialization project
+   a) vuessr init
+   b) vuessr init <GITHUB-PACKAGE-VERSION>
+   c) vuessr init <GITHUB-PACKAGE-VERSION> -n <PROJECT-NAME>
+   d) vuessr init <GITHUB-PACKAGE-VERSION> -n <PROJECT-NAME> -p <PROJECT-PATH>
 ```
 
 相关命令
