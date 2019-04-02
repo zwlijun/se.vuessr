@@ -90,7 +90,7 @@ export default const {
         let o = undefined;
         let key = null;
 
-        let tmp = obj;
+        let tmp = undefined;
         for(let i = 0; i < size; i++){
             key = items[i];
 
