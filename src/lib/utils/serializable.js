@@ -46,5 +46,21 @@ export default const {
         }
  
         return uuid.join('');
+    },
+    /**
+     * 根据传的值范围生成随机数
+     * @param  {[type]} minValue [description]
+     * @param  {[type]} maxValue [description]
+     * @return {[type]}          [description]
+     */
+    random: function(minValue, maxValue){
+        const rnd = (Math.random() * (maxValue - minValue)) + min;
+
+        const ret = {
+            intValue: Math.floor(rnd),
+            floatValue: rnd;
+        };
+
+        return ret;
     }
 };
