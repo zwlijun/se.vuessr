@@ -12,24 +12,19 @@
 'use strict';
 
 function getGlobalObject(type){
+	let obj = undefined;
+
     try{
-        let dataType = "";
-
         if("window" == type){
-            dataType = Object.prototype.toString.call(window);
+            obj = (window.window === window) ? window : undefined;
         }else if("global" == type){
-            type = "object";
-            dataType = Object.prototype.toString.call(global);
+            obj = (global.global === global) ? global : undefined;
         }
-        dataType = dataType.substring(dataType.indexOf(" ") + 1, dataType.indexOf("]"));
-        dataType = dataType.toLowerCase();
-
-        if(dataType === type){
-            return obj
-        }
-    }catch(e){}
-
-    return undefined;
+    }catch(e){
+    	obj = undefined;
+    }finally{
+    	return obj;
+    }
 }
 
 export default const {
@@ -41,14 +36,6 @@ export default const {
 		return !!getGlobalObject("window");
 	},
 	global: function(){
-		if(this.node()){
-			return global;
-		}
-
-		if(this.browser()){
-			return window;
-		}
-
-		return this.__global;
+		return getGlobalObject("window") || getGlobalObject("global") || this.__global;
 	}
 }

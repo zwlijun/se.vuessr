@@ -87,7 +87,7 @@ class Listener{
     }
 
     /**
-     * 移除所有handler或指定的handler
+     * 移除指定类型下所有handler或指定的handler
      * @param  {[type]} eventType [description]
      * @param  {[type]} handler   [description]
      * @return {[type]}           [description]
@@ -113,6 +113,15 @@ class Listener{
                 this._handlers[key] = items
             }
         }
+    }
+
+    /**
+     * 清除所有handler
+     * @return {[type]} [description]
+     */
+    clear(){
+        this._handlers = null;
+        this._handlers = {};
     }
 
     /**
