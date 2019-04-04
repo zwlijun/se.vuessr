@@ -13,7 +13,7 @@
 
 import {execHandler} from "./handler";
 
-export default const {
+const _public = {
     /**
      * 位校验
      * @param int fixedValue 固定的源值
@@ -254,7 +254,7 @@ export default const {
         end = end || blob.size;
         type = type || blob.type;
 
-        let newblob = _util.blobSlice(blob, start, end, type); 
+        let newblob = this.blobSlice(blob, start, end, type); 
         let reader = new FileReader();
 
         reader.onload = function(e){
@@ -283,7 +283,7 @@ export default const {
         end = end || blob.size;
         type = type || blob.type;
 
-        let newblob = _util.blobSlice(blob, start, end, type); 
+        let newblob = this.blobSlice(blob, start, end, type); 
         let reader = new FileReader();
         
         reader.onload = function(e){
@@ -342,3 +342,5 @@ export default const {
         return str;
     }
 }
+
+export default _public;

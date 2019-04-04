@@ -96,7 +96,7 @@ Shake.prototype = {
 
 Shake.ShakePool = {};
 
-module.exports = {
+const _public = {
     "version": "R17B0817",
     getShake: function(name, handler, threshold, timeout){
         let shake = Shake.ShakePool[name] || (Shake.ShakePool[name] = new Shake(handler, threshold, timeout));
@@ -115,3 +115,5 @@ module.exports = {
         }
     }
 };
+
+export default _public;

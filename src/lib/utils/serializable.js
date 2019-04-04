@@ -11,7 +11,7 @@
  */
 'use strict';
 
-export default const {
+const _public = {
     /**
      * 生成唯一ID
      * @param {[type]} len   长度
@@ -64,3 +64,5 @@ export default const {
         return ret;
     }
 };
+
+export default _public;

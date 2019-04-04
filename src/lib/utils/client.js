@@ -13,7 +13,7 @@
 
 import {assign} from "./serializable"
 
-export default const {   
+const _public = {
     /**
      * 过滤XSS的非法字符
      * @param String str 需要进行过滤的字符串
@@ -223,4 +223,6 @@ export default const {
         tmp = null; o = null;
         return str;
     }
-}
+};
+
+export default _public;

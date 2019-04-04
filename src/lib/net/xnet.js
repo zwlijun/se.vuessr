@@ -322,9 +322,29 @@ XNet.getInstance = function(name){
  */
 XNet.exec = function(name, options){
     const xnet = XNet.create(name);
-
+    console.log(options)
     xnet.createOptions(options || {});
     return xnet.send();
 }
 
-export default XNet;
+const _public = {
+    "GET"      : XNet.GET,
+    "POST"     : XNet.POST,
+    "PUT"      : XNet.PUT,
+    "HEAD"     : XNet.HEAD,
+    "OPTIONS"  : XNet.OPTIONS,
+    "DELETE"   : XNet.DELETE,
+    "PATCH"    : XNet.PATCH,
+    "PAGE_SIZE": XNet.PAGE_SIZE,
+    create: (name) => {
+        return XNet.create.apply(XNet, [name])
+    },
+    getInstance: (name) => {
+        return XNet.getInstance.apply(XNet, [name])
+    },
+    exec: (name, options) => {
+        return XNet.exec.apply(XNet, [name, options])
+    }
+};
+
+export default _public;

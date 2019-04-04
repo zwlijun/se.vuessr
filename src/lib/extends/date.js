@@ -11,7 +11,7 @@
  */
 'use strict';
 
-export default const {
+const _public = {
 	/**
      * 解析   
      * @param String str 需要校验的字符串
@@ -315,3 +315,5 @@ export default const {
         return d2;
     }
 }
+
+export default _public;

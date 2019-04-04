@@ -11,7 +11,7 @@
  */
 'use strict';
 
-export default const Cookie = {
+const Cookie = {
     encode: function(str){
         return encodeURIComponent(str);
     },
@@ -149,3 +149,5 @@ export default const Cookie = {
         }
     }
 };
+
+export default Cookie;

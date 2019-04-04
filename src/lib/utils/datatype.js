@@ -32,7 +32,7 @@ function isHTMLElementCollection(obj){
     return obj instanceof NodeList;
 }
 
-export default const {
+const _public = {
     type: function(obj){
         return dataType(obj);
     },
@@ -150,4 +150,6 @@ export default const {
     isRegExp: function(obj){
         return "regexp" === dataType(obj);
     }
-}
+};
+
+export default _public;

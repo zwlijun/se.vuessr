@@ -14,7 +14,7 @@
 import {parse as parseDate} from "../extends/date";
 import {parseURL} from "../utils/client";
 
-export default const {
+const _public = {
     /**
      * 是否為中國大陸身份證
      * @param String v 需要校驗的值
@@ -206,3 +206,5 @@ export default const {
         return !p.test(v);
     }
 }
+
+export default _public;

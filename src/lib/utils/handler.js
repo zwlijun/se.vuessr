@@ -11,7 +11,7 @@
  */
 'use strict';
 
-export default const {
+const _public = {
 	/**
      * 创建一个合法的handler
      * @param  {[type]} handler [description]
@@ -64,3 +64,5 @@ export default const {
         return undefined;
     }
 };
+
+export default _public;

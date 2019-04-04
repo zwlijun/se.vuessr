@@ -29,7 +29,7 @@ function result(url, code, result, msg){
     return ret;
 }
 
-export default const {
+const _public = {
     define: function(scheme, metaData){
         __global = assign(__global[scheme] || (__global[scheme] = {}), metaData || {});
     },
@@ -69,4 +69,6 @@ export default const {
 
         return result(url, 0, method.apply(block, [hash].concat(args)), "success");
     }
-}
+};
+
+export default _public;

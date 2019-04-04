@@ -11,7 +11,7 @@
  */
 'use strict';
 
-export default const VersionUtil = {
+const VersionUtil = {
     encode: function(versionString){
         let s = versionString.split(".");
 
@@ -53,3 +53,5 @@ export default const VersionUtil = {
         return currentVersion > targetVersion;
     }
 };
+
+export default VersionUtil;

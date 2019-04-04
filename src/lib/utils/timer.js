@@ -142,7 +142,7 @@ Timer.prototype = {
 
 Timer.TimerPool = {};
 
-export default const {
+const _public = {
     	"getTimer": function(name, fps, handler){
             name = name || "timer_" + UUID(32);
             fps = fps || 0;
@@ -160,3 +160,5 @@ export default const {
         }
     };
 };
+
+export default _public;

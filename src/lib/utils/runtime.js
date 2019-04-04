@@ -27,7 +27,7 @@ function getGlobalObject(type){
     }
 }
 
-export default const {
+const _public = {
 	__global: {},
 	node: function(){
 		return !!getGlobalObject("global");
@@ -38,4 +38,6 @@ export default const {
 	global: function(){
 		return getGlobalObject("window") || getGlobalObject("global") || this.__global;
 	}
-}
+};
+
+export default _public;

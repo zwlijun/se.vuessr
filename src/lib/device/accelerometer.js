@@ -93,7 +93,7 @@ Accelerometer.prototype = {
 Accelerometer.MemCache = {};
 
 
-export default {
+const _public = {
     "getAccelerometer": function(name, handler){
         let acc = Accelerometer.MemCache[name] || (Accelerometer.MemCache[name] = new Accelerometer(handler));
 
@@ -116,4 +116,4 @@ export default {
         }
     }
 };
-
+export default _public;

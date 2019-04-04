@@ -11,7 +11,7 @@
  */
 'use strict';
 
-export default const {
+const _public = {
 	/**
      * 替换所有匹配的字符/字符串
      * @param String instr 输入的字符串
@@ -291,3 +291,5 @@ export default const {
         return str;
     }
 }
+
+export default _public;
