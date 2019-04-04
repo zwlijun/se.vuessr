@@ -42,7 +42,21 @@ module.exports = {
     ],
     module: {
         noParse: /es6-promise\.js$/, // avoid webpack shimming process
-        rules: [{
+        rules: [
+            {
+                test: /\.html$/,
+                use: [ {
+                    loader: 'html-loader',
+                    options: {
+                        minimize: true,
+                        removeComments: false,
+                        collapseWhitespace: true,
+                        removeAttributeQuotes: false,
+                        interpolate: "require"
+                    }
+                }]
+            },  
+            {
                 test: /\.vue$/,
                 loader: "vue-loader",
                 options: {
@@ -63,19 +77,19 @@ module.exports = {
                 loader: "babel-loader"
             },
             {
-                test: /\.(png|jpe?g|gif|svg)$/,
+                test: /\.(png|jpe?g|gif)$/,
                 loader: "url-loader",
                 options: {
                     limit: 10000,
-                    name: "static/img/[name].[chunkhash].[ext]"
+                    name: "static/img/[name].[md5:hash:hex:8].[ext]"
                 }
             },
             {
-                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+                test: /\.(woff2?|eot|ttf|otf|svg)(\?.*)?$/,
                 loader: "url-loader",
                 query: {
                     limit: 10000,
-                    name: "static/fonts/[name].[chunkhash].[ext]"
+                    name: "static/fonts/[name].[md5:hash:hex:8].[ext]"
                 }
             },
             {

@@ -12,6 +12,11 @@ const readFile = (fs, file) => {
   } catch (e) {}
 }
 
+const loadServerTemplate = (fs) => {
+  //fs.readFileSync(templatePath, 'utf-8')
+  return readFile(fs, "server.html")
+}
+
 module.exports = function setupDevServer (app, templatePath, cb) {
   let bundle
   let template
@@ -29,13 +34,6 @@ module.exports = function setupDevServer (app, templatePath, cb) {
     }
   }
 
-  // read template from disk and watch
-  template = fs.readFileSync(templatePath, 'utf-8')
-  chokidar.watch(templatePath).on('change', () => {
-    template = fs.readFileSync(templatePath, 'utf-8')
-    console.log('index.html template updated.')
-    update()
-  })
 
   // modify client config to work with hot middleware
   clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app]
@@ -47,17 +45,30 @@ module.exports = function setupDevServer (app, templatePath, cb) {
 
   // dev middleware
   const clientCompiler = webpack(clientConfig)
+
   const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
     publicPath: clientConfig.output.publicPath,
     noInfo: true,
     index: "/"  //指定index，解决无法直接访问根目的问题
   })
   app.use(devMiddleware)
+
+  chokidar.watch(templatePath).on('change', () => {
+    template = loadServerTemplate(devMiddleware.fileSystem)
+
+    console.log('index.html template updated.')
+    update()
+  })
+
   clientCompiler.plugin('done', stats => {
     stats = stats.toJson()
     stats.errors.forEach(err => console.error(err))
     stats.warnings.forEach(err => console.warn(err))
     if (stats.errors.length) return
+
+    // template = fs.readFileSync(templatePath, 'utf-8')
+    template = loadServerTemplate(devMiddleware.fileSystem)
+
     clientManifest = JSON.parse(readFile(
       devMiddleware.fileSystem,
       'vue-ssr-client-manifest.json'

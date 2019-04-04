@@ -322,7 +322,7 @@ XNet.getInstance = function(name){
  */
 XNet.exec = function(name, options){
     const xnet = XNet.create(name);
-    console.log(options)
+
     xnet.createOptions(options || {});
     return xnet.send();
 }

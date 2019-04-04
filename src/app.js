@@ -2,7 +2,8 @@ import Vue from 'vue'
 import App from './app.vue'
 import {createStore} from './store';
 import {createRouter} from './router';
-import { sync } from 'vuex-router-sync'
+import { sync } from 'vuex-router-sync';
+import "@/assets/css/lib/g.css";
 
 export function createVueApp() {
 	// create router and store instances
