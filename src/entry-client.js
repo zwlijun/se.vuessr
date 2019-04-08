@@ -1,5 +1,5 @@
+// import('es6-promise/auto')
 import Vue from 'vue'
-import 'es6-promise/auto'
 import { createVueApp } from './app'
 
 // a global mixin that calls `asyncData` when a route component's params change

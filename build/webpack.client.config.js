@@ -5,11 +5,15 @@ const base = require('./webpack.base.config')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const WorkBoxPlugin = require("workbox-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const VUESSRContext = require("../conf/server/context.conf");
 
+const devMode = process.env.NODE_ENV !== 'production';
+
 const config = merge(base, {
-  resolve: process.env.NODE_ENV === 'production' ? {} : {
+  resolve: !devMode ? {} : {
       alias: {
           'vue': 'vue/dist/vue.js'
       }
@@ -36,7 +40,7 @@ const config = merge(base, {
     new WorkBoxPlugin.GenerateSW({
       swDest: 'service-worker.js',
       importWorkboxFrom: "local",
-      cacheId: process.env.NODE_ENV === 'production' ? VUESSRContext.service : (function(){
+      cacheId: !devMode ? VUESSRContext.service : (function(){
         const hmac = crypto.createHmac("sha1", VUESSRContext.service);
         hmac.update("" + Date.now() + "/" + Math.random());
         const hex_hmac = hmac.digest("hex");
@@ -64,9 +68,35 @@ const config = merge(base, {
     })
   ],
   optimization: {
+    minimize: false,
+    minimizer: (devMode ? [
+      //@TODO 开发插件
+    ] : [
+      new UglifyJsPlugin()
+    ]).concat([
+      new OptimizeCSSAssetsPlugin()
+    ]),
+    nodeEnv: process.env.NODE_ENV,
+    noEmitOnErrors: false,
+    namedModules: false,
+    namedChunks: false,
+    moduleIds: devMode ? "named" : "hashed",
+    chunkIds: devMode ? "named" : "natural",
+    mangleWasmImports: false,
+    removeAvailableModules: true,
+    removeEmptyChunks: true,
+    mergeDuplicateChunks: true,
+    flagIncludedChunks: true,
+    occurrenceOrder: true,
+    providedExports: true,
+    usedExports: true,
+    concatenateModules: true,
+    sideEffects: false,
+    portableRecords: false,
+    runtimeChunk: false,
     splitChunks: {
         chunks: 'async',
-        minSize: 30000,
+        minSize: 1024 * 1024,
         maxSize: 0,
         minChunks: 1,
         maxAsyncRequests: 5,
@@ -75,25 +105,28 @@ const config = merge(base, {
         name: true,
         cacheGroups: {
           vendors: {
+            name: "vendor",
             test: /[\\/]node_modules[\\/]/,
-            priority: -10
+            priority: -10,
+            reuseExistingChunk: true
           },
+          // styles: {
+          //   name: "styles",
+          //   chunks: "all",
+          //   test: /\.(s?css)$/,
+          //   priority: -5,
+          //   minChunks: 1,
+          //   reuseExistingChunk: true,
+          //   enforce: true
+          // },
           default: {
             minChunks: 2,
             priority: -20,
             reuseExistingChunk: true
           }
         }
-    },
-    minimizer: []
+    }
   }
 })
-
-if (process.env.NODE_ENV === 'production') {
-  config.optimization.minimizer.push(
-    // minify JS
-    new UglifyJsPlugin()
-  )
-}
 
 module.exports = config
