@@ -3,7 +3,7 @@
     <h1>Hello, world</h1>
     <p>build by <cite>{{this.$store.getters["server/serverInfo"]}}</cite></p>
     <p>Server Response: <strong>{{text}}</strong></p>
-    <p>i18n: {{message.welcome}}</p>
+    <p>i18n: {{i18n.welcome}}</p>
   </div>
 </template>
 <style scoped>
@@ -51,8 +51,7 @@ cite{
                       "content": "test",
                       "data-alias": "ssr"
                     }
-                ],
-                "message": this.$store.getters["i18n/message"]
+                ]
             }
         },
         asyncData({store, route}){

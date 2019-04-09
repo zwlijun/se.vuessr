@@ -4,6 +4,15 @@ import runtime from "../utils/runtime";
 
 const LIFECYCLE_HOOKS = {
     /**
+     * The data object for the Vue instance
+     * @return {[type]} [description]
+     */
+    data(){
+        return {
+            "i18n": this.$store.getters["i18n/message"]
+        }
+    },
+    /**
      * Called synchronously immediately after the instance 
      * has been initialized, before data observation and event/watcher setup.
      * @return {[type]} [description]
