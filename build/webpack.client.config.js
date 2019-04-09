@@ -68,7 +68,7 @@ const config = merge(base, {
     })
   ],
   optimization: {
-    minimize: false,
+    minimize: true,
     minimizer: (devMode ? [
       //@TODO 开发插件
     ] : [
