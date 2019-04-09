@@ -3,20 +3,16 @@
  **********************************************************/
 
 /**
- * VUE Store 模块引用
+ * 英文配置
  * @charset utf-8
  * @author lijun
  * @git: https://github.com/zwlijun/se.vuessr
- * @date 2019.2
+ * @date 2019.4
  */
 'use strict';
 
-import server from "./server";
-import hello from "./hello";
-import i18n from "./i18n";
-
-export default {
-	i18n,
-	server,
-	hello
+const i18n = {
+    welcome: "Welcome to se.vuessr"
 };
+
+export default i18n;

@@ -65,6 +65,7 @@ const Cookie = {
             /^([\da-f]{1,4}:)*([\da-f]{1,4})::([\da-f]{1,4})(:[\da-f]{1,4})*:[\d]{1,3}(\.[\d]{1,3}){3}$/i  //X:X::X:X:d.d.d.d, X::X:d.d.d.d, X::X:X:d.d.d.d, X:X::X:d.d.d.d
         ];
 
+        let pattern = null;
         for(let i = 0; i < patterns.length; i++){
             pattern = patterns[i];
             pattern.lastIndex = 0;

@@ -12,7 +12,7 @@
 'use strict';
 
 import Handler from "./handler";
-import {UUID} from "./serializable";
+import Serializable from "./serializable";
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating     
@@ -55,7 +55,7 @@ const rAF = requestAnimationFrame;
 const cAF = cancelAnimationFrame;
 
 let Timer = function(name, fps, handler){
-    this.name = name || UUID(32);
+    this.name = name || Serializable.UUID(32);
     this.fps = fps || 0;
     this.handler = handler || null;
     this.timerId = null;
@@ -144,7 +144,7 @@ Timer.TimerPool = {};
 
 const _public = {
     	"getTimer": function(name, fps, handler){
-            name = name || "timer_" + UUID(32);
+            name = name || "timer_" + Serializable.UUID(32);
             fps = fps || 0;
             handler = handler || null;
             

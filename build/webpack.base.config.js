@@ -10,7 +10,7 @@ module.exports = {
     devtool: isProd ? false : "#cheap-module-source-map",
     entry: {
         app: "./src/entry-client.js",
-        // transform: "es6-promise/auto",
+        transform: "es6-promise/auto",
         core: "vue",
         plugins: [
             "vue-router",

@@ -11,8 +11,8 @@
  */
 'use strict';
 
-import {parse as parseDate} from "../extends/date";
-import {parseURL} from "../utils/client";
+import DateUtil from "../extends/date";
+import Client from "../utils/client";
 
 const _public = {
     /**
@@ -138,55 +138,55 @@ const _public = {
         return p.test(v);
     },
     url: function(data, v, el){
-        let urlInfo = parseURL(v, false);
+        let urlInfo = Client.parseURL(v, false);
 
         return !!urlInfo.url;
     },
     datetime: function(data, v, el){
         let fmt = el.attr("data-dtpicker-format") || "%y-%M-%d %h:%m:%s";
-        let check = parseDate(v, fmt);
+        let check = DateUtil.parseDate(v, fmt);
 
         return check.ok;
     },
     shortdatetime: function(data, v, el){
         let fmt = el.attr("data-dtpicker-format") || "%y-%M-%d %h:%m";
-        let check = parseDate(v, fmt);
+        let check = DateUtil.parseDate(v, fmt);
 
         return check.ok;
     },
     date: function(data, v, el){
         let fmt = el.attr("data-dtpicker-format") || "%y-%M-%d";
-        let check = parseDate(v, fmt);
+        let check = DateUtil.parseDate(v, fmt);
 
         return check.ok;
     },
     shortdate: function(data, v, el){
         let fmt = el.attr("data-dtpicker-format") || "%y-%M";
-        let check = parseDate(v, fmt);
+        let check = DateUtil.parseDate(v, fmt);
 
         return check.ok;
     },
     shortdate2: function(data, v, el){
         let fmt = el.attr("data-dtpicker-format") || "%M-%d";
-        let check = parseDate(v, fmt);
+        let check = DateUtil.parseDate(v, fmt);
 
         return check.ok;
     },
     time: function(data, v, el){
         let fmt = el.attr("data-dtpicker-format") || "%h:%m:%s";
-        let check = parseDate(v, fmt);
+        let check = DateUtil.parseDate(v, fmt);
 
         return check.ok;
     },
     shorttime: function(data, v, el){
         let fmt = el.attr("data-dtpicker-format") || "%h:%m";
-        let check = parseDate(v, fmt);
+        let check = DateUtil.parseDate(v, fmt);
 
         return check.ok;
     },
     shorttime2: function(data, v, el){
         let fmt = el.attr("data-dtpicker-format") || "%m:%s";
-        let check = parseDate(v, fmt);
+        let check = DateUtil.parseDate(v, fmt);
 
         return check.ok;
     },

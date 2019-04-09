@@ -11,7 +11,8 @@
  */
 'use strict';
 
-import {assign} from "./serializable"
+import ObjectUtil from "../extends/object";
+import runtime from "./runtime";
 
 const _public = {
     /**
@@ -19,6 +20,9 @@ const _public = {
      * @param String str 需要进行过滤的字符串
      */
     filterScript: function(str){
+        if(runtime.node()){
+            return str;
+        }
         let text = document.createTextNode(str);
         let parser = document.createElement("div");
         let value = "";
@@ -38,7 +42,7 @@ const _public = {
      * @return String key所对应的值，如果不存在返回null
      */
     getParameter:function(key, querystring){
-        let search = (querystring || document.location.search);
+        let search = (querystring || runtime.node() ? "" : document.location.search);
         let pattern = new RegExp("[\?&]"+key+"\=([^&#\?]*)", "g");
         let matcher = pattern.exec(search);
         let items = null;
@@ -153,7 +157,7 @@ const _public = {
     merge: function(data1, data2){
         let _data1 = this.serialized(data1);
         let _data2 = this.serialized(data2);
-        let newData = assign(_data1, _data2);
+        let newData = ObjectUtil.assign(_data1, _data2);
 
         return this.stringify(newData);
     },

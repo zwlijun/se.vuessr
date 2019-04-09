@@ -11,7 +11,7 @@
  */
 'use strict';
 
-import {execHandler} from "./handler";
+import Handler from "./handler";
 
 function Shake(handler, threshold, timeout){
     this.hasDeviceMotion = 'ondevicemotion' in window;
@@ -76,7 +76,7 @@ Shake.prototype = {
 
             if(timeDifference > this.timeout){
                 //todo
-                execHandler(this.handler);
+                Handler.execHandler(this.handler);
                 this.lastTime = new Date();
             }
         }

@@ -1,4 +1,4 @@
-// import('es6-promise/auto')
+import('es6-promise/auto')
 import Vue from 'vue'
 import { createVueApp } from './app'
 

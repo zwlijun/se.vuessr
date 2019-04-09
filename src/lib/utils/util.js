@@ -11,7 +11,7 @@
  */
 'use strict';
 
-import {execHandler} from "./handler";
+import Handler from "./handler";
 
 const _public = {
     /**
@@ -227,13 +227,13 @@ const _public = {
         let img = new Image();
 
         img.onload = function(e){
-            execHandler(callback, [img, img.naturalWidth || img.width, img.naturalHeight || img.height]);
+            Handler.execHandler(callback, [img, img.naturalWidth || img.width, img.naturalHeight || img.height]);
 
             img = null;
         }
 
         img.onerror = function(e){
-            execHandler(callback, [null, 0, 0]);
+            Handler.execHandler(callback, [null, 0, 0]);
 
             img = null;
         }
@@ -258,11 +258,11 @@ const _public = {
         let reader = new FileReader();
 
         reader.onload = function(e){
-            execHandler(handler, [e, e.target.result]);
+            Handler.execHandler(handler, [e, e.target.result]);
         };
 
         reader.onerror = function(e){
-            execHandler(handler, [e, null]);
+            Handler.execHandler(handler, [e, null]);
         };
 
         blob = null;
@@ -287,11 +287,11 @@ const _public = {
         let reader = new FileReader();
         
         reader.onload = function(e){
-            execHandler(handler, [e, e.target.result]);
+            Handler.execHandler(handler, [e, e.target.result]);
         };
 
         reader.onerror = function(e){
-            execHandler(handler, [e, null]);
+            Handler.execHandler(handler, [e, null]);
         };
 
         blob = null;

@@ -12,8 +12,8 @@
 'use strict';
 
 import runtime from "./runtime";
-import {assign, find} from "../extends/object";
-import {parseURL} from "./client";
+import ObjectUtil from "../extends/object";
+import Client from "./client";
 
 let __global = runtime.global();
 
@@ -31,10 +31,10 @@ function result(url, code, result, msg){
 
 const _public = {
     define: function(scheme, metaData){
-        __global = assign(__global[scheme] || (__global[scheme] = {}), metaData || {});
+        __global = ObjectUtil.assign(__global[scheme] || (__global[scheme] = {}), metaData || {});
     },
     request: function(url, args){
-        const URLInfo = parseURL(url, false);
+        const URLInfo = Client.parseURL(url, false);
         const protocol = URLInfo.protocol;
         const scheme = protocol.replace(":", "");
         const path = (URLInfo.host + URLInfo.pathname).replace("/" + URLInfo.filename, "");
@@ -51,7 +51,7 @@ const _public = {
             return result(url, -2, null, `scheme(${scheme}) metadata not found`);
         }
 
-        const pkg = find(block, path);
+        const pkg = ObjectUtil.find(block, path);
 
         if(!pkg){
             return result(url, -3, null, `package(${package}) is not defined in scheme(${scheme})`);

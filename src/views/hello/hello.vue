@@ -3,6 +3,7 @@
     <h1>Hello, world</h1>
     <p>build by <cite>{{this.$store.getters["server/serverInfo"]}}</cite></p>
     <p>Server Response: <strong>{{text}}</strong></p>
+    <p>{{message.welcome}}</p>
   </div>
 </template>
 <style scoped>
@@ -12,7 +13,6 @@ cite{
 </style>
 <script>
     //@import
-    import {mapActions} from "vuex";
     import {title, seo, ogp, meta, LIFECYCLE_HOOKS} from "~lib/mixins/index";
     export default {
         mixins: [title, seo, ogp, meta, LIFECYCLE_HOOKS],
@@ -50,7 +50,8 @@ cite{
                       "content": "test",
                       "data-alias": "ssr"
                     }
-                ]
+                ],
+                "message": this.$store.getters["i18n/message"]
             }
         },
         asyncData({store, route}){

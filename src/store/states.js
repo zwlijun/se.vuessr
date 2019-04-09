@@ -12,5 +12,5 @@
 'use strict';
 
 export default {
-
+	
 };

@@ -1,3 +1,6 @@
+import iLang from "../i18n";
+import i18n from "@/i18n";
+
 const LIFECYCLE_HOOKS = {
     /**
      * Called synchronously immediately after the instance 
@@ -20,7 +23,7 @@ const LIFECYCLE_HOOKS = {
      * @return {[type]} [description]
      */
     created(){
-        //@todo            
+        //@todo
     },
     /**
      * Called right before the mounting begins: the render function is 
@@ -32,6 +35,8 @@ const LIFECYCLE_HOOKS = {
      */
     beforeMount(){
         //@todo
+        iLang.setLang("en-US");
+        this.$store.commit("i18n/message", i18n());
     },
     /**
      * Called after the instance has been mounted, where el is 
@@ -101,7 +106,7 @@ const LIFECYCLE_HOOKS = {
      * @return {[type]} [description]
      */
     activated(){
-
+        //@todo
     },
     /**
      * Called when a kept-alive component is deactivated.
@@ -111,7 +116,7 @@ const LIFECYCLE_HOOKS = {
      * @return {[type]} [description]
      */
     deactivated(){
-
+        //@todo
     },
     /**
      * Called right before a Vue instance is destroyed. At this stage the instance is still fully functional.
