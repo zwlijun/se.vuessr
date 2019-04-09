@@ -86,7 +86,7 @@ const Cookie = {
         let items = domain.split(".");
         let size = items.length;
 
-        if(size > 2 && !Cookie.ipv4(domain) && !Cookie.ipv6(domain)){
+        if(!Cookie.ipv4(domain) && !Cookie.ipv6(domain)){
             domain = items.slice(size - 2).join(".");
         }
 
