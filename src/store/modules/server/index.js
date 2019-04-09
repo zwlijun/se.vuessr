@@ -35,6 +35,9 @@ export default {
         server(state, payload){
             state.server = payload;
         },
+        cookies(state, payload){
+            state.cookies = payload;
+        },
         meta(state, payload){
             state.meta = payload;
         },
@@ -56,6 +59,9 @@ export default {
         },
         serverInfo: (state) => {
             return state.server || "VUE SPA";
+        },
+        cookies: (state) => {
+            return state.cookies || {};
         },
         seo: (state) => {
             return state.seo;

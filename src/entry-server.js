@@ -14,7 +14,7 @@ export default context => {
         const s = isDev && Date.now()
         const { app, router, store } = createVueApp()
 
-        const { client, server, meta, ogp, seo } = context
+        const { client, server, meta, ogp, seo, cookies } = context
         const { fullPath } = router.resolve(client.relativeURL).route
 
         // console.log("context", context)
@@ -25,6 +25,7 @@ export default context => {
         store.commit("server/meta", meta)
         store.commit("server/ogp", ogp)
         store.commit("server/seo", seo)
+        store.commit("server/cookies", cookies)
         //--------------------------
         
         if (fullPath !== client.relativeURL) {
@@ -48,7 +49,8 @@ export default context => {
             // updated.
             Promise.all(matchedComponents.map(({ asyncData }) => asyncData && asyncData({
                 store,
-                route: router.currentRoute
+                route: router.currentRoute,
+                cookies
             }))).then(() => {
                 isDev && console.log(`data pre-fetch: ${Date.now() - s}ms`)
                 // After all preFetch hooks are resolved, our store is now

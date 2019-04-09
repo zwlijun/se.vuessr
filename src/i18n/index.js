@@ -18,11 +18,11 @@ import zh_CN from "./zh-CN";
 import en_US from "./en-US";
 
 const i18n = new Map();
-const lang = iLang.language();
 
 i18n.set("zh-CN", zh_CN);
 i18n.set("en-US", en_US);
 
-export default function conf(){
-	return i18n.get(lang) || {};
+export default function conf(lang){
+	let _lang = lang || iLang.language();
+	return i18n.get(_lang) || {};
 };

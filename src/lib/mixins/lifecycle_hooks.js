@@ -1,5 +1,6 @@
 import iLang from "../i18n";
 import i18n from "@/i18n";
+import runtime from "../utils/runtime";
 
 const LIFECYCLE_HOOKS = {
     /**
@@ -9,6 +10,14 @@ const LIFECYCLE_HOOKS = {
      */
     beforeCreate(){
         //@todo
+        //处理服务器端cookie
+        if(runtime.node()){
+            let cookies = this.$store.getters["server/cookies"];
+
+            if(cookies && cookies.lang){
+                this.$store.commit("i18n/message", i18n(cookies.lang));
+            }
+        }
     },
     /**
      * Called synchronously after the instance is created. At this stage, 

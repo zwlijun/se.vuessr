@@ -253,8 +253,7 @@ function doRender(req, res){
             "absoluteURL": absoluteURL,
             "relativeURL": relativeURL,
             "host": host,
-            "pathname": req.path,
-            "cookies": req.cookies
+            "pathname": req.path
         };
     })(req);
 
@@ -273,6 +272,7 @@ function doRender(req, res){
         "nonce": hex_hmac,
         "client": clientInfo,
         "server": serverInfo,
+        "cookies": req.cookies,
         "ogp": {
             "og:url": (VUESSRContext["ogp"] || {})["og:url"] || clientInfo.absoluteURL
         }

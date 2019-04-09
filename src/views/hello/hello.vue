@@ -3,7 +3,7 @@
     <h1>Hello, world</h1>
     <p>build by <cite>{{this.$store.getters["server/serverInfo"]}}</cite></p>
     <p>Server Response: <strong>{{text}}</strong></p>
-    <p>{{message.welcome}}</p>
+    <p>i18n: {{message.welcome}}</p>
   </div>
 </template>
 <style scoped>
@@ -15,6 +15,7 @@ cite{
     //@import
     import {title, seo, ogp, meta, LIFECYCLE_HOOKS} from "~lib/mixins/index";
     export default {
+        name: "hello",
         mixins: [title, seo, ogp, meta, LIFECYCLE_HOOKS],
         components: {},
         title(){
