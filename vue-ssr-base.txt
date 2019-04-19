@@ -45,9 +45,9 @@ se.vuessr
             + utils
                 - index.js
                 - util.js 
-                - string.js
-                - datetime.js
                 - ....
+            + extends
+            + mixins
             + i18n
             + crypto
             + net
@@ -62,7 +62,8 @@ se.vuessr
                 - index.js
         // 模板
         + templates
-            - index.render.html
+            - index.server.html
+            - index.client.html
         // 文档片断
         + fragments
         // VUE视图

@@ -1,10 +1,13 @@
 const fs = require('fs')
+const ejs = require('ejs')
 const path = require('path')
 const MFS = require('memory-fs')
 const webpack = require('webpack')
 const chokidar = require('chokidar')
 const clientConfig = require('./webpack.client.config')
 const serverConfig = require('./webpack.server.config')
+const minify = require('html-minifier').minify;
+const HTMLMinifierConf = require("../conf/build/html-minifier.conf");
 
 const readFile = (fs, file) => {
   try {
@@ -12,9 +15,19 @@ const readFile = (fs, file) => {
   } catch (e) {}
 }
 
-const loadServerTemplate = (fs) => {
-  //fs.readFileSync(templatePath, 'utf-8')
-  return readFile(fs, "server.html")
+const loadTemplate = (serverRenderTemplatePath) => {
+    let serverTemplate;
+    ejs.renderFile(serverRenderTemplatePath, {}, {}, (err, template) => {
+        if(err){
+            throw err;
+        }
+        serverTemplate = template;
+    });
+    while(!serverTemplate){
+        console.log("loading server template...");
+    }
+
+    return minify(serverTemplate, HTMLMinifierConf);
 }
 
 module.exports = function setupDevServer (app, templatePath, cb) {
@@ -54,7 +67,7 @@ module.exports = function setupDevServer (app, templatePath, cb) {
   app.use(devMiddleware)
 
   chokidar.watch(templatePath).on('change', () => {
-    template = loadServerTemplate(devMiddleware.fileSystem)
+    template = loadTemplate(templatePath) //fs.readFileSync(templatePath, 'utf-8');
 
     console.log('index.html template updated.')
     update()
@@ -66,8 +79,7 @@ module.exports = function setupDevServer (app, templatePath, cb) {
     stats.warnings.forEach(err => console.warn(err))
     if (stats.errors.length) return
 
-    // template = fs.readFileSync(templatePath, 'utf-8')
-    template = loadServerTemplate(devMiddleware.fileSystem)
+    template = loadTemplate(templatePath) //fs.readFileSync(templatePath, 'utf-8');
 
     clientManifest = JSON.parse(readFile(
       devMiddleware.fileSystem,

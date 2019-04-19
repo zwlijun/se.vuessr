@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-${require("./inc/meta.html")}
-${require("./inc/rem.source.html")}
+<%- include ./inc/meta.html -%>
+<%- include ./inc/rem.source.html -%>
 {{{state.server.meta}}}
 {{{state.server.seoMeta}}}
 {{{state.server.ogpMeta}}}
 <title>{{state.server.title}}</title>
 <link rel="manifest" href="/manifest.json">
-${require("./inc/stat_code_header.html")}
+<%- include ./inc/stat_code_header.html -%>
 </head>
 
 <body>
 <!--vue-ssr-outlet-->
 </body>
-${require("./inc/stat_code_footer.html")}
+<%- include ./inc/stat_code_footer.html -%>
 </html>

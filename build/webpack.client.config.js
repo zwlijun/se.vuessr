@@ -9,6 +9,7 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const VUESSRContext = require("../conf/server/context.conf");
+const HTMLMinifierConf = require("../conf/build/html-minifier.conf");
 
 const devMode = process.env.NODE_ENV !== 'production';
 
@@ -27,12 +28,14 @@ const config = merge(base, {
     // generate output HTML
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'src/templates/index.client.html',
-      inject: true
+      template: './src/templates/index.client.ejs',
+      inject: true,
+      minify: HTMLMinifierConf
     }),
     new HtmlWebpackPlugin({
       filename: 'server.html',
-      template: 'src/templates/index.server.html'
+      template: './src/templates/index.server.ejs',
+      minify: HTMLMinifierConf
     }),
     new VueSSRClientPlugin(),
     //service worker plugin

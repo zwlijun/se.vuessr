@@ -1,0 +1,7 @@
+{
+	"minifyCSS": true,
+    "minifyJS": true,
+    "removeComments": false,
+    "removeAttributeQuotes": false,
+    "collapseWhitespace": true
+}

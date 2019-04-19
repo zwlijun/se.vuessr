@@ -43,7 +43,7 @@ module.exports = {
         rules: [
             {
                 test: /\.html$/,
-                use: [ {
+                use: [{
                     loader: 'html-loader',
                     options: {
                         minimize: true,
@@ -51,6 +51,15 @@ module.exports = {
                         collapseWhitespace: true,
                         removeAttributeQuotes: false,
                         interpolate: "require"
+                    }
+                }]
+            }, 
+            {
+                test: /\.ejs$/,
+                use: [{
+                    loader: "ejs-webpack-loader",
+                    options: {
+                        htmlmin: true
                     }
                 }]
             },  
