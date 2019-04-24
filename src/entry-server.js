@@ -11,7 +11,7 @@ const isDev = process.env.NODE_ENV !== 'production'
 // return a Promise that resolves to the app instance.
 export default context => {
     return new Promise((resolve, reject) => {
-        const s = isDev && Date.now()
+        const s = Date.now()
         const { app, router, store } = createVueApp()
 
         const { client, server, meta, ogp, seo, cookies } = context
@@ -43,16 +43,25 @@ export default context => {
                 reject({ code: 404 })
             }
 
+            const currentRoute = router.currentRoute;
+            let currentRouteName = currentRoute.name;
+
             // Call fetchData hooks on components matched by the route.
             // A preFetch hook dispatches a store action and returns a Promise,
             // which is resolved when the action is complete and store state has been
             // updated.
-            Promise.all(matchedComponents.map(({ asyncData }) => asyncData && asyncData({
-                store,
-                route: router.currentRoute,
-                cookies
-            }))).then(() => {
-                isDev && console.log(`data pre-fetch: ${Date.now() - s}ms`)
+            Promise.all(matchedComponents.map(
+                ({ name, asyncData }) => {
+                    console.log(`[${currentRouteName}]`, `server component[${name}] asyncData...`)
+
+                    asyncData && asyncData({
+                        store,
+                        route: currentRoute,
+                        cookies
+                    })
+                }
+            )).then(() => {
+                console.log(`[${currentRouteName}]`, `server data pre-fetch: ${Date.now() - s}ms`)
                 // After all preFetch hooks are resolved, our store is now
                 // filled with the state needed to render the app.
                 // Expose the state on the render context, and let the request handler
@@ -61,6 +70,7 @@ export default context => {
                 // the initial data fetching on the client.
                 context.state = store.state
                 resolve(app)
+                console.log(`[${currentRouteName}]`, `server app resolve: ${Date.now() - s}ms`)
             }).catch(reject)
         }, reject)
     })

@@ -79,10 +79,6 @@ const lurCacheOptions = new LRUCache({
     maxAge: 1000 * 60 * 15
 });
 
-if(debugMode){
-    require('easy-monitor')(VUESSRContext.service);
-}
-
 const expressAppServer = express();
 
 expressAppServer.disable("x-powered-by");
@@ -227,7 +223,7 @@ for(let i = 0; i < proxyServiceSize; i++){
     expressAppServer.use(proxy(proxyService.uri, proxyService.options));
 }
 
-function doRender(req, res){
+function doRender(req, res, next){
     const s = Date.now();
 
     res.setHeader("Content-Type", "text/html");
@@ -298,9 +294,11 @@ function doRender(req, res){
             const timing = (Date.now() - s);
             console.log(`${clientInfo.absoluteURL} -> Server Render: ${timing}ms`);
         }).pipe(res);
+
+    // next();
 }
-const __routerRender = isProd ? doRender : (req, res) => {
-    serverRendererPromise.then(() => doRender(req, res));
+const __routerRender = isProd ? doRender : (req, res, next) => {
+    serverRendererPromise.then(() => doRender(req, res, next));
 };
 
 // expressAppServer.use(favicon('./favicon.ico'));
@@ -310,7 +308,7 @@ expressAppServer.use('/manifest.json', serve('./dist/vue-ssr-client-manifest.jso
 expressAppServer.use('/service-worker.js', serve('./dist/service-worker.js', true));
 expressAppServer.use(`/${WORKBOX_LOCAL_DIR}`, serve(`./dist/${WORKBOX_LOCAL_DIR}`));
 
-expressAppServer.get('*', __routerRender);
+expressAppServer.get('*', (req, res, next) => __routerRender(req, res, next));
 
 
 HttpConf.listen(expressAppServer, httpPort, securePort);

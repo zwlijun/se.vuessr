@@ -11,31 +11,34 @@
  */
 'use strict';
 
+const DNSErrorNO = require("./errno.dns.conf");
+const STDErrorNO = require("./errno.std.conf");
+
 const ErrorPages = {
 	"default": {
 		"type": "text",
-		"value": "500 | Internal Server Error",
+		"message": "Internal Server Error",
 		"code": 500
 	},
 	"401": {
 		"type": "redirect",
-		"value": "/login"
+		"message": "/login"
 	},
 	"403": "401",
 	"404": {
 		"type": "text",
-		"value": "404 | Page Not Found"
+		"message": "File Not Found"
 	},
 	"500": "default",
 	"4xx": "default",
 	"5xx": "default",
 	"504": {
 		"type": "text",
-		"value": "504 | Gateway Timeout"
+		"message": "Gateway Timeout"
 	},
 	"408": {
 		"type": "text",
-		"value": "408 | Request Timeout"
+		"message": "Request Timeout"
 	}
 };
 
@@ -47,26 +50,32 @@ function parse(errorCode){
 
 	let page = null;
 
-	if(errorCode in ErrorPages){
-		page = ErrorPages[errorCode];
-
-		if(typeof page == "string"){
-			page = ErrorPages[errorCode][page];
-		}
+	if(errorCode in STDErrorNO){
+		page = STDErrorNO[errorCode];
+	}else if(errorCode in DNSErrorNO){
+		page = DNSErrorNO[errorCode];
 	}else{
-		errorCode = errorCode.substring(0, 1) + "xx";
-
 		if(errorCode in ErrorPages){
 			page = ErrorPages[errorCode];
 
 			if(typeof page == "string"){
-				page = ErrorPages[errorCode][page];
+				page = ErrorPages[page];
+			}
+		}else{
+			let matchErrorCode = errorCode.substring(0, 1) + "xx";
+
+			if(matchErrorCode in ErrorPages){
+				page = ErrorPages[matchErrorCode];
+
+				if(typeof page == "string"){
+					page = ErrorPages[page];
+				}
 			}
 		}
-	}
 
-	if(page){
-		page["code"] = ValidCode(errorCode);
+		if(page){
+			page["code"] = ValidCode(errorCode);
+		}
 	}
 
 	return page || ErrorPages["default"];
@@ -91,23 +100,20 @@ function ValidCode(code){
 }
 
 function log(debugMode, type, err){
-	if(debugMode){
+	// if(debugMode){
 		console.log("errorpage#" + type + " => ", err);
-	}
+	// }
 }
 
 module.exports = {
 	process: function(err, req, res, debugMode){
 		let ex = err || {};
 		let code = err.code;
-
+		
 		if(ex.response){
 			code = ex.response.status;
 			log(debugMode, "response -> " + req.url, err);
 		}else if(ex.request){
-			if("ECONNABORTED" == code){
-				code = 408;
-			}
 			log(debugMode, "request -> " + req.url, err);
 		}else if(ex.url){
 			log(debugMode, "redirect -> " + req.url, err);
@@ -119,12 +125,14 @@ module.exports = {
 
 		let page = parse(code);
 
+		log(debugMode, "error-page", page);
+
 		if(null !== page){
 			if("redirect" == page.type){
-				res.redirect(301, page.value);
+				res.redirect(301, page.message);
 				return ;
 			}else{
-				res.status(page.code).send(page.value);
+				res.status(page.code).send(page.message);
 			}
 		}else{
 			res.sendStatus(ValidCode());
@@ -135,7 +143,7 @@ module.exports = {
 		let page = parse(504);
 
 		if("redirect" == page.type){
-			res.redirect(302, page.value);
+			res.redirect(302, page.message);
 			return true;
 		}else{
 			res.status(page.code);
@@ -143,7 +151,9 @@ module.exports = {
 
 		//如果返回 true 则会中断流程执行并调用 res.end() ==> true :: res.end();
 		if(true === isInterrupt){
-			res.end(page.value);
+			res.end(page.message);
+		}else{
+			res.send(page.message);
 		}
 
 		return isInterrupt;

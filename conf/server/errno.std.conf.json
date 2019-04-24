@@ -1,0 +1,667 @@
+{
+	"EPERM": {
+		"type": "text",
+		"code":801,
+		"message": "Operation not permitted"
+	},
+	"ENOENT": {
+		"type": "text",
+		"code":802,
+		"message": "No such file or directory"
+	},
+	"ESRCH": {
+		"type": "text",
+		"code":803,
+		"message": "No such process"
+	},
+	"EINTR": {
+		"type": "text",
+		"code":804,
+		"message": "Interrupted system call"
+	},
+	"EIO": {
+		"type": "text",
+		"code":805,
+		"message": "I/O error"
+	},
+	"ENXIO": {
+		"type": "text",
+		"code":806,
+		"message": "No such device or address"
+	},
+	"E2BIG": {
+		"type": "text",
+		"code":807,
+		"message": "Argument list too long"
+	},
+	"ENOEXEC": {
+		"type": "text",
+		"code":808,
+		"message": "Exec format error"
+	},
+	"EBADF": {
+		"type": "text",
+		"code":809,
+		"message": "Bad file number"
+	},
+	"ECHILD": {
+		"type": "text",
+		"code":810,
+		"message": "No child processes"
+	},
+	"EAGAIN": {
+		"type": "text",
+		"code":811,
+		"message": "Try again"
+	},
+	"ENOMEM": {
+		"type": "text",
+		"code":812,
+		"message": "Out of memory"
+	},
+	"EACCES": {
+		"type": "text",
+		"code":813,
+		"message": "Permission denied"
+	},
+	"EFAULT": {
+		"type": "text",
+		"code":814,
+		"message": "Bad address"
+	},
+	"ENOTBLK": {
+		"type": "text",
+		"code":815,
+		"message": "Block device required"
+	},
+	"EBUSY": {
+		"type": "text",
+		"code":816,
+		"message": "Device or resource busy"
+	},
+	"EEXIST": {
+		"type": "text",
+		"code":817,
+		"message": "File exists"
+	},
+	"EXDEV": {
+		"type": "text",
+		"code":818,
+		"message": "Cross-device link"
+	},
+	"ENODEV": {
+		"type": "text",
+		"code":819,
+		"message": "No such device"
+	},
+	"ENOTDIR": {
+		"type": "text",
+		"code":820,
+		"message": "Not a directory"
+	},
+	"EISDIR": {
+		"type": "text",
+		"code":821,
+		"message": "Is a directory"
+	},
+	"EINVAL": {
+		"type": "text",
+		"code":822,
+		"message": "Invalid argument"
+	},
+	"ENFILE": {
+		"type": "text",
+		"code":823,
+		"message": "File table overflow"
+	},
+	"EMFILE": {
+		"type": "text",
+		"code":824,
+		"message": "Too many open files"
+	},
+	"ENOTTY": {
+		"type": "text",
+		"code":825,
+		"message": "Not a typewriter"
+	},
+	"ETXTBSY": {
+		"type": "text",
+		"code":826,
+		"message": "Text file busy"
+	},
+	"EFBIG": {
+		"type": "text",
+		"code":827,
+		"message": "File too large"
+	},
+	"ENOSPC": {
+		"type": "text",
+		"code":828,
+		"message": "No space left on device"
+	},
+	"ESPIPE": {
+		"type": "text",
+		"code":829,
+		"message": "Illegal seek"
+	},
+	"EROFS": {
+		"type": "text",
+		"code":830,
+		"message": "Read-only file system"
+	},
+	"EMLINK": {
+		"type": "text",
+		"code":831,
+		"message": "Too many links"
+	},
+	"EPIPE": {
+		"type": "text",
+		"code":832,
+		"message": "Broken pipe"
+	},
+	"EDOM": {
+		"type": "text",
+		"code":833,
+		"message": "Math argument out of domain of func"
+	},
+	"ERANGE": {
+		"type": "text",
+		"code":834,
+		"message": "Math result not representable"
+	},
+	"EDEADLK": {
+		"type": "text",
+		"code":835,
+		"message": "Resource deadlock would occur"
+	},
+	"ENAMETOOLONG": {
+		"type": "text",
+		"code":836,
+		"message": "File name too long"
+	},
+	"ENOLCK": {
+		"type": "text",
+		"code":837,
+		"message": "No record locks available"
+	},
+	"ENOSYS": {
+		"type": "text",
+		"code":838,
+		"message": "Function not implemented"
+	},
+	"ENOTEMPTY": {
+		"type": "text",
+		"code":839,
+		"message": "Directory not empty"
+	},
+	"ELOOP": {
+		"type": "text",
+		"code":840,
+		"message": "Too many symbolic links encountered"
+	},
+	"EWOULDBLOCK": {
+		"type": "text",
+		"code":841,
+		"message": "Operation would block"
+	},
+	"ENOMSG": {
+		"type": "text",
+		"code":842,
+		"message": "No message of desired type"
+	},
+	"EIDRM": {
+		"type": "text",
+		"code":843,
+		"message": "Identifier removed"
+	},
+	"ECHRNG": {
+		"type": "text",
+		"code":844,
+		"message": "Channel number out of range"
+	},
+	"EL2NSYNC": {
+		"type": "text",
+		"code":845,
+		"message": "Level 2 not synchronized"
+	},
+	"EL3HLT": {
+		"type": "text",
+		"code":846,
+		"message": "Level 3 halted"
+	},
+	"EL3RST": {
+		"type": "text",
+		"code":847,
+		"message": "Level 3 reset"
+	},
+	"ELNRNG": {
+		"type": "text",
+		"code":848,
+		"message": "Link number out of range"
+	},
+	"EUNATCH": {
+		"type": "text",
+		"code":849,
+		"message": "Protocol driver not attached"
+	},
+	"ENOCSI": {
+		"type": "text",
+		"code":850,
+		"message": "No CSI structure available"
+	},
+	"EL2HLT": {
+		"type": "text",
+		"code":851,
+		"message": "Level 2 halted"
+	},
+	"EBADE": {
+		"type": "text",
+		"code":852,
+		"message": "Invalid exchange"
+	},
+	"EBADR": {
+		"type": "text",
+		"code":853,
+		"message": "Invalid request descriptor"
+	},
+	"EXFULL": {
+		"type": "text",
+		"code":854,
+		"message": "Exchange full"
+	},
+	"ENOANO": {
+		"type": "text",
+		"code":855,
+		"message": "No anode"
+	},
+	"EBADRQC": {
+		"type": "text",
+		"code":856,
+		"message": "Invalid request code"
+	},
+	"EBADSLT": {
+		"type": "text",
+		"code":857,
+		"message": "Invalid slot"
+	},
+	"EDEADLOCK": {
+		"type": "text",
+		"code":858,
+		"message": "File locking deadlock error"
+	},
+	"EBFONT": {
+		"type": "text",
+		"code":859,
+		"message": "Bad font file format"
+	},
+	"ENOSTR": {
+		"type": "text",
+		"code":860,
+		"message": "Device not a stream"
+	},
+	"ENODATA": {
+		"type": "text",
+		"code":861,
+		"message": "No data available"
+	},
+	"ETIME": {
+		"type": "text",
+		"code":862,
+		"message": "Timer expired"
+	},
+	"ENOSR": {
+		"type": "text",
+		"code":863,
+		"message": "Out of streams resources"
+	},
+	"ENONET": {
+		"type": "text",
+		"code":864,
+		"message": "Machine is not on the network"
+	},
+	"ENOPKG": {
+		"type": "text",
+		"code":865,
+		"message": "Package not installed"
+	},
+	"EREMOTE": {
+		"type": "text",
+		"code":866,
+		"message": "Object is remote"
+	},
+	"ENOLINK": {
+		"type": "text",
+		"code":867,
+		"message": "Link has been severed"
+	},
+	"EADV": {
+		"type": "text",
+		"code":868,
+		"message": "Advertise error"
+	},
+	"ESRMNT": {
+		"type": "text",
+		"code":869,
+		"message": "Srmount error"
+	},
+	"ECOMM": {
+		"type": "text",
+		"code":870,
+		"message": "Communication error on send"
+	},
+	"EPROTO": {
+		"type": "text",
+		"code":871,
+		"message": "Protocol error"
+	},
+	"EMULTIHOP": {
+		"type": "text",
+		"code":872,
+		"message": "Multihop attempted"
+	},
+	"EDOTDOT": {
+		"type": "text",
+		"code":873,
+		"message": "RFS specific error"
+	},
+	"EBADMSG": {
+		"type": "text",
+		"code":874,
+		"message": "Not a data message"
+	},
+	"EOVERFLOW": {
+		"type": "text",
+		"code":875,
+		"message": "Value too large for defined data type"
+	},
+	"ENOTUNIQ": {
+		"type": "text",
+		"code":876,
+		"message": "Name not unique on network"
+	},
+	"EBADFD": {
+		"type": "text",
+		"code":877,
+		"message": "File descriptor in bad state"
+	},
+	"EREMCHG": {
+		"type": "text",
+		"code":878,
+		"message": "Remote address changed"
+	},
+	"ELIBACC": {
+		"type": "text",
+		"code":879,
+		"message": "Can not access a needed shared library"
+	},
+	"ELIBBAD": {
+		"type": "text",
+		"code":880,
+		"message": "Accessing a corrupted shared library"
+	},
+	"ELIBSCN": {
+		"type": "text",
+		"code":881,
+		"message": ".lib section in a.out corrupted"
+	},
+	"ELIBMAX": {
+		"type": "text",
+		"code":882,
+		"message": "Attempting to link in too many shared libraries"
+	},
+	"ELIBEXEC": {
+		"type": "text",
+		"code":883,
+		"message": "Cannot exec a shared library directly"
+	},
+	"EILSEQ": {
+		"type": "text",
+		"code":884,
+		"message": "Illegal byte sequence"
+	},
+	"ERESTART": {
+		"type": "text",
+		"code":885,
+		"message": "Interrupted system call should be restarted"
+	},
+	"ESTRPIPE": {
+		"type": "text",
+		"code":886,
+		"message": "Streams pipe error"
+	},
+	"EUSERS": {
+		"type": "text",
+		"code":887,
+		"message": "Too many users"
+	},
+	"ENOTSOCK": {
+		"type": "text",
+		"code":888,
+		"message": "Socket operation on non-socket"
+	},
+	"EDESTADDRREQ": {
+		"type": "text",
+		"code":889,
+		"message": "Destination address required"
+	},
+	"EMSGSIZE": {
+		"type": "text",
+		"code":890,
+		"message": "Message too long"
+	},
+	"EPROTOTYPE": {
+		"type": "text",
+		"code":891,
+		"message": "Protocol wrong type for socket"
+	},
+	"ENOPROTOOPT": {
+		"type": "text",
+		"code":892,
+		"message": "Protocol not available"
+	},
+	"EPROTONOSUPPORT": {
+		"type": "text",
+		"code":893,
+		"message": "Protocol not supported"
+	},
+	"ESOCKTNOSUPPORT": {
+		"type": "text",
+		"code":894,
+		"message": "Socket type not supported"
+	},
+	"EOPNOTSUPP": {
+		"type": "text",
+		"code":895,
+		"message": "Operation not supported on transport endpoint"
+	},
+	"EPFNOSUPPORT": {
+		"type": "text",
+		"code":896,
+		"message": "Protocol family not supported"
+	},
+	"EAFNOSUPPORT": {
+		"type": "text",
+		"code":897,
+		"message": "Address family not supported by protocol"
+	},
+	"EADDRINUSE": {
+		"type": "text",
+		"code":898,
+		"message": "Address already in use"
+	},
+	"EADDRNOTAVAIL": {
+		"type": "text",
+		"code":899,
+		"message": "Cannot assign requested address"
+	},
+	"ENETDOWN": {
+		"type": "text",
+		"code":900,
+		"message": "Network is down"
+	},
+	"ENETUNREACH": {
+		"type": "text",
+		"code":901,
+		"message": "Network is unreachable"
+	},
+	"ENETRESET": {
+		"type": "text",
+		"code":902,
+		"message": "Network dropped connection because of reset"
+	},
+	"ECONNABORTED": {
+		"type": "text",
+		"code":903,
+		"message": "Software caused connection abort"
+	},
+	"ECONNRESET": {
+		"type": "text",
+		"code":904,
+		"message": "Connection reset by peer"
+	},
+	"ENOBUFS": {
+		"type": "text",
+		"code":905,
+		"message": "No buffer space available"
+	},
+	"EISCONN": {
+		"type": "text",
+		"code":906,
+		"message": "Transport endpoint is already connected"
+	},
+	"ENOTCONN": {
+		"type": "text",
+		"code":907,
+		"message": "Transport endpoint is not connected"
+	},
+	"ESHUTDOWN": {
+		"type": "text",
+		"code":908,
+		"message": "Cannot send after transport endpoint shutdown"
+	},
+	"ETOOMANYREFS": {
+		"type": "text",
+		"code":909,
+		"message": "Too many references: cannot splice"
+	},
+	"ETIMEDOUT": {
+		"type": "text",
+		"code":910,
+		"message": "Connection timed out"
+	},
+	"ECONNREFUSED": {
+		"type": "text",
+		"code":911,
+		"message": "Connection refused"
+	},
+	"EHOSTDOWN": {
+		"type": "text",
+		"code":912,
+		"message": "Host is down"
+	},
+	"EHOSTUNREACH": {
+		"type": "text",
+		"code":913,
+		"message": "No route to host"
+	},
+	"EALREADY": {
+		"type": "text",
+		"code":914,
+		"message": "Operation already in progress"
+	},
+	"EINPROGRESS": {
+		"type": "text",
+		"code":915,
+		"message": "Operation now in progress"
+	},
+	"ESTALE": {
+		"type": "text",
+		"code":916,
+		"message": "Stale file handle"
+	},
+	"EUCLEAN": {
+		"type": "text",
+		"code":917,
+		"message": "Structure needs cleaning"
+	},
+	"ENOTNAM": {
+		"type": "text",
+		"code":918,
+		"message": "Not a XENIX named type file"
+	},
+	"ENAVAIL": {
+		"type": "text",
+		"code":919,
+		"message": "No XENIX semaphores available"
+	},
+	"EISNAM": {
+		"type": "text",
+		"code":920,
+		"message": "Is a named type file"
+	},
+	"EREMOTEIO": {
+		"type": "text",
+		"code":921,
+		"message": "Remote I/O error"
+	},
+	"EDQUOT": {
+		"type": "text",
+		"code":922,
+		"message": "Quota exceeded"
+	},
+	"ENOMEDIUM": {
+		"type": "text",
+		"code":923,
+		"message": "No medium found"
+	},
+	"EMEDIUMTYPE": {
+		"type": "text",
+		"code":924,
+		"message": "Wrong medium type"
+	},
+	"ECANCELED": {
+		"type": "text",
+		"code":925,
+		"message": "Operation Canceled"
+	},
+	"ENOKEY": {
+		"type": "text",
+		"code":926,
+		"message": "Required key not available"
+	},
+	"EKEYEXPIRED": {
+		"type": "text",
+		"code":927,
+		"message": "Key has expired"
+	},
+	"EKEYREVOKED": {
+		"type": "text",
+		"code":928,
+		"message": "Key has been revoked"
+	},
+	"EKEYREJECTED": {
+		"type": "text",
+		"code":929,
+		"message": "Key was rejected by service"
+	},
+	"EOWNERDEAD": {
+		"type": "text",
+		"code":930,
+		"message": "Owner died"
+	},
+	"ENOTRECOVERABLE": {
+		"type": "text",
+		"code":931,
+		"message": "State not recoverable"
+	},
+	"ERFKILL": {
+		"type": "text",
+		"code":932,
+		"message": "Operation not possible due to RF-kill"
+	},
+	"EHWPOISON": {
+		"type": "text",
+		"code":933,
+		"message": "Memory page has hardware error"
+	}
+}

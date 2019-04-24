@@ -1,0 +1,122 @@
+{
+	"ENODATA": {
+		"type": "text",
+		"code": 701,
+		"message": "DNS server returned answer with no data"
+	},
+	"EFORMERR": {
+		"type": "text",
+		"code": 702,
+		"message": "DNS server claims query was misformatted"
+	},
+	"ESERVFAIL": {
+		"type": "text",
+		"code": 703,
+		"message": "DNS server returned general failure"
+	},
+	"ENOTFOUND": {
+		"type": "text",
+		"code": 704,
+		"message": "Domain name not found"
+	},
+	"ENOTIMP": {
+		"type": "text",
+		"code": 705,
+		"message": "DNS server does not implement requested operation"
+	},
+	"EREFUSED": {
+		"type": "text",
+		"code": 706,
+		"message": "DNS server refused query"
+	},
+	"EBADQUERY": {
+		"type": "text",
+		"code": 707,
+		"message": "Misformatted DNS query"
+	},
+	"EBADNAME": {
+		"type": "text",
+		"code": 708,
+		"message": "Misformatted hostname"
+	},
+	"EBADFAMILY": {
+		"type": "text",
+		"code": 709,
+		"message": "Unsupported address family"
+	},
+	"EBADRESP": {
+		"type": "text",
+		"code": 710,
+		"message": "Misformatted DNS reply"
+	},
+	"ECONNREFUSED": {
+		"type": "text",
+		"code": 711,
+		"message": "Could not contact DNS servers"
+	},
+	"ETIMEOUT": {
+		"type": "text",
+		"code": 712,
+		"message": "Timeout while contacting DNS servers"
+	},
+	"EOF": {
+		"type": "text",
+		"code": 713,
+		"message": "End of file"
+	},
+	"EFILE": {
+		"type": "text",
+		"code": 714,
+		"message": "Error reading file"
+	},
+	"ENOMEM": {
+		"type": "text",
+		"code": 715,
+		"message": "Out of memory"
+	},
+	"EDESTRUCTION": {
+		"type": "text",
+		"code": 716,
+		"message": "Channel is being destroyed"
+	},
+	"EBADSTR": {
+		"type": "text",
+		"code": 717,
+		"message": "Misformatted string"
+	},
+	"EBADFLAGS": {
+		"type": "text",
+		"code": 718,
+		"message": "Illegal flags specified"
+	},
+	"ENONAME": {
+		"type": "text",
+		"code": 719,
+		"message": "Given hostname is not numeric"
+	},
+	"EBADHINTS": {
+		"type": "text",
+		"code": 720,
+		"message": "Illegal hints flags specified"
+	},
+	"ENOTINITIALIZED": {
+		"type": "text",
+		"code": 721,
+		"message": "c-ares library initialization not yet performed"
+	},
+	"ELOADIPHLPAPI": {
+		"type": "text",
+		"code": 722,
+		"message": "Error loading iphlpapi.dll"
+	},
+	"EADDRGETNETWORKPARAMS": {
+		"type": "text",
+		"code": 723,
+		"message": "Could not find GetNetworkParams function"
+	},
+	"ECANCELLED": {
+		"type": "text",
+		"code": 724,
+		"message": "DNS query cancelled"
+	}
+}

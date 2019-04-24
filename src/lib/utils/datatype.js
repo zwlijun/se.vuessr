@@ -125,6 +125,17 @@ const _public = {
     isUndefined: function(obj){
         return (undefined === obj);
     },
+    isSymbol: function(obj){
+        return "symbol" === dataType(obj);
+    },
+    isPrimitive: function(obj){
+        return this.isString(obj) 
+            || this.isNumber(obj)
+                || this.isBoolean(obj)
+                    || this.isNull(obj)
+                        || this.isUndefined(obj)
+                            || this.isSymbol(obj);
+    },
     isEmptyString: function(obj){
         if(this.isString(obj)){
             obj = obj.replace(/^([\s]+)|([\s]+)$/, "");
@@ -143,6 +154,14 @@ const _public = {
     },
     isFunction: function(obj){
         return "function" === dataType(obj);
+    },
+    isNativeCode: function(obj){
+        if(this.isFunction(obj)){
+            let str = obj.toString();
+
+            return str.indexOf("[native code]") >= 0;
+        }
+        return false;
     },
     isDate: function(obj){
         return "date" === dataType(obj);
