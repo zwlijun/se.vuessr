@@ -44,7 +44,6 @@ export default context => {
             }
 
             const currentRoute = router.currentRoute;
-            let currentRouteName = currentRoute.name;
 
             // Call fetchData hooks on components matched by the route.
             // A preFetch hook dispatches a store action and returns a Promise,
@@ -52,16 +51,20 @@ export default context => {
             // updated.
             Promise.all(matchedComponents.map(
                 ({ name, asyncData }) => {
-                    console.log(`[${currentRouteName}]`, `server component[${name}] asyncData...`)
+                    console.log(`[${currentRoute.name}]`, `server components[${name}] asyncData...`)
 
-                    asyncData && asyncData({
-                        store,
-                        route: currentRoute,
-                        cookies
-                    })
+                    if(asyncData){
+                        return asyncData({
+                            store,
+                            route: currentRoute,
+                            cookies
+                        })
+                    }
+
+                    return null;
                 }
             )).then(() => {
-                console.log(`[${currentRouteName}]`, `server data pre-fetch: ${Date.now() - s}ms`)
+                console.log(`[${currentRoute.name}]`, `server data pre-fetch: ${Date.now() - s}ms`)
                 // After all preFetch hooks are resolved, our store is now
                 // filled with the state needed to render the app.
                 // Expose the state on the render context, and let the request handler
@@ -70,7 +73,8 @@ export default context => {
                 // the initial data fetching on the client.
                 context.state = store.state
                 resolve(app)
-                console.log(`[${currentRouteName}]`, `server app resolve: ${Date.now() - s}ms`)
+
+                console.log(`[${currentRoute.name}]`, `server app resolve: ${Date.now() - s}ms`)
             }).catch(reject)
         }, reject)
     })
