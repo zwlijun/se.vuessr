@@ -340,6 +340,17 @@ const _public = {
         }
 
         return str;
+    },
+    /**
+     * 延时执行回调
+     * @param  {[type]} time    [description]
+     * @param  {[type]} handler [description]
+     * @return {[type]}         [description]
+     */
+    delay: function(time, handler){
+        setTimeout(function(){
+            Handler.execHandler(handler);
+        }, time);
     }
 }
 

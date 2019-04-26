@@ -89,7 +89,7 @@ Timer.prototype = {
         if(true !== _ins.isRunning){
             _ins.isRunning = true;
 
-            (function(){
+            const fn = function(){
                 time = (new Date().getTime());
 
                 if(_ins.fps === 0 || (_ins.fps > 0 && (time - lastTime) > (1000 / _ins.fps))){
@@ -101,9 +101,11 @@ Timer.prototype = {
                 }
 
                 if(true === _ins.isRunning){
-                    _ins.timerId = _ins.element ? rAF(arguments.callee, _ins.element) : rAF(arguments.callee);
+                    _ins.timerId = _ins.element ? rAF(fn, _ins.element) : rAF(fn);
                 }
-            })();
+            };
+
+            fn();
         }
     },
     stop: function(){
@@ -143,22 +145,21 @@ Timer.prototype = {
 Timer.TimerPool = {};
 
 const _public = {
-    	"getTimer": function(name, fps, handler){
-            name = name || "timer_" + Serializable.UUID(32);
-            fps = fps || 0;
-            handler = handler || null;
-            
-            let timer = Timer.TimerPool[name] || (Timer.TimerPool[name] = new Timer(name, fps, handler));
+	"getTimer": function(name, fps, handler){
+        name = name || "timer_" + Serializable.UUID(32);
+        fps = fps || 0;
+        handler = handler || null;
+        
+        let timer = Timer.TimerPool[name] || (Timer.TimerPool[name] = new Timer(name, fps, handler));
 
-            return timer;
-        },
-        "toFPS": function(millisecond){
-            return 1000 / millisecond;
-        },
-        "toMillisecond": function(fps){
-            return 1000 / fps;
-        }
-    };
+        return timer;
+    },
+    "toFPS": function(millisecond){
+        return 1000 / millisecond;
+    },
+    "toMillisecond": function(fps){
+        return 1000 / fps;
+    }
 };
 
 export default _public;
