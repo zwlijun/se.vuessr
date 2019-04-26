@@ -1,6 +1,6 @@
 <template>
-  <div class="mod-toast ellipsis flexbox middle center" :id="toastId" :class="[type, position, skin, visible ? 'show' : 'init', exit ? 'exit' : '']">
-    <cite v-if="ToastTypes.ICON === type"></cite>
+  <div class="mod-toast ellipsis flexbox middle center vertical" :id="toastId" :class="[type, position, skin, visible ? 'show' : 'init', exit ? 'exit' : '']">
+    <cite v-if="Types.ICON === type" class="flexbox middle center" :class="icon"></cite>
     <span class="ellipsis">{{text}}</span>
   </div>
 </template>
@@ -15,7 +15,6 @@
         background-color: rgba(0, 0, 0, .75);
         color: #fff;
         padding: .16rem .40rem;
-        border-radius: 4rem;
         line-height: 1.5;
         opacity: 0;
         -webkit-transition: opacity .4s;
@@ -23,6 +22,20 @@
             -ms-transition: opacity .4s;
                 transition: opacity .4s;
         white-space: nowrap;
+    }
+    .mod-toast span{
+        display: inline-block;
+    }
+    .mod-toast.text-toast{
+        border-radius: 4rem;
+    }
+    .mod-toast.icon-toast{
+        border-radius: .16rem;
+    }
+    .mod-toast.icon-toast cite{
+        width: 3.60rem;
+        height: 2.40rem;
+        font-size: 2.40rem;
     }
     .mod-toast.init{
         left: -100000px!important;
@@ -33,10 +46,6 @@
     }
     .mod-toast.exit{
         opacity: 0!important;
-    }
-    .mod-toast cite,
-    .mod-toast span{
-        display: inline-block;
     }
     .mod-toast.toast-center-top{
         top: .40rem;
@@ -122,8 +131,8 @@
         Position: ToastPosition,
         data: function(){
             return {
-                ToastTypes: ToastTypes,
-                ToastPosition: ToastPosition,
+                Types: ToastTypes,
+                Position: ToastPosition,
                 exit: false
             };
         },
@@ -144,6 +153,12 @@
             skin: {
                 type: String,
                 default: ""
+            },
+            icon: {
+                type: Array,
+                default: function(){
+                    return [];
+                }
             },
             type: {
                 type: String,
@@ -216,6 +231,7 @@
                     "text": options.text || "",
                     "visible": true === options.visible,
                     "skin": options.skin || "",
+                    "icon": options.icon || [],
                     "type": options.type || ToastTypes.TEXT,
                     "position": options.position || ToastPosition.CENTER_MIDDLE,
                     "delay": options.delay || 3000,

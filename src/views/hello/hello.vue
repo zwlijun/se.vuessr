@@ -7,6 +7,12 @@
     <toast skin="test" :visible="toastVisible" :position="Toast.Position.CENTER_MIDDLE" :text="text"></toast>
   </div>
 </template>
+<style module>
+.icofont.success:before,
+.icofont.ok:before{
+    margin-right: 0;
+}    
+</style>
 <style scoped>
 cite{
     color: #002bff;
@@ -78,8 +84,11 @@ cite{
         methods: {
             showTips(){
                 Toast.message({
+                    "type": Toast.Types.ICON,
+                    "icon": ["icofont", "success"],
                     "text": `${this.i18n.welcome}`,
-                    "visible": true
+                    "visible": true,
+                    "delay": 100000
                 })
             }
         }
