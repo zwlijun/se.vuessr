@@ -76,20 +76,6 @@ openssl ca -in server.csr -out server.crt -cert ca.crt -keyfile ca.key -config D
 openssl ca -in client.csr -out client.crt -cert ca.crt -keyfile ca.key -config D:/app/openssl-0.9.8h-1-bin/share/openssl.cnf
 ```
 
-easy-monitor 在Windows无法安装解决方法
---
-前提安装好  node-gyp 和 node-pre-gyp
-```
-npm install node-gyp -g
-npm install node-pre-gyp -g
-```
-1. 通过npm 安装windows的build工具 
-   ```
-   npm install --global windows-build-tools
-   ```
-2. 如果还是不行，检查Python的版本号，Python用windows-build-tools中的Python(2.7)就可以了。如果之前有安装过其他的版本，把系统环境变量path中的Python配置改成window-build-tools中Python中执行路径就可以了。
-
-
 Nginx配置示例参考(SSR服务超时降级SPA模式)
 --
 ```
