@@ -3,7 +3,7 @@
     <h1>Hello, world</h1>
     <p>build by <cite>{{this.$store.getters["server/serverInfo"]}}</cite></p>
     <p>Server Response: <strong>{{text}}</strong></p>
-    <p @click="showTips">i18n: {{i18n.welcome}}</p>
+    <p @click="showTips">i18n: {{i18n.welcome}} - Toast</p>
     <toast skin="test" :visible="toastVisible" :position="Toast.Position.CENTER_MIDDLE" :text="text"></toast>
   </div>
 </template>
@@ -88,7 +88,7 @@ cite{
                     "icon": ["icofont", "success"],
                     "text": `${this.i18n.welcome}`,
                     "visible": true,
-                    "delay": 100000
+                    "delay": 3000
                 })
             }
         }
