@@ -79,197 +79,205 @@ openssl ca -in client.csr -out client.crt -cert ca.crt -keyfile ca.key -config D
 Nginx配置示例参考(SSR服务超时降级SPA模式)
 --
 ```
-    upstream node_appserver {
-        server 127.0.0.1:9000  weight=5 max_fails=2 fail_timeout=900s;  #SSR
-        server 127.0.0.1:10080 weight=1 max_fails=2 fail_timeout=900s;  #SPA
+upstream node_appserver {
+    server 127.0.0.1:9000  weight=5 max_fails=2 fail_timeout=15s;  #SSR
+    server 127.0.0.1:10080 weight=1 max_fails=2 fail_timeout=15s;  #SPA
+}
+
+upstream node_appserver_ssl {
+    server 127.0.0.1:9443  weight=5 max_fails=2 fail_timeout=15s;  #SSR
+    server 127.0.0.1:10443 weight=1 max_fails=2 fail_timeout=15s;  #SPA
+}
+
+###############################
+# SSR MODE Server             #
+###############################
+
+server {
+    listen       9080;
+    server_name  localhost;
+
+    #强制到HTTPS
+    return 301 https://$host:9083$request_uri;
+
+    root /data/app/se.vuessr/dist;
+
+    location ~* \.(gif|jpg|jpeg|png|bmp|swf|svg|eot|ttf|woff)$ {
+        expires 7d;
+        break;
+    }
+    location ~* \.(css)$ {
+        expires 3d;
+        break;
+    }
+    location ~* \.(js)$ {
+        expires 3d;
+        break;
+    }
+    location = /manifest.json {
+        try_files $uri $uri /vue-ssr-client-manifest.json = 200;
+        break;
+    }
+    location ~* \.(json)$ {
+        expires 15m;
+        break;
     }
 
-    upstream node_appserver_ssl {
-        server 127.0.0.1:9443  weight=5 max_fails=2 fail_timeout=900s;  #SSR
-        server 127.0.0.1:10443 weight=1 max_fails=2 fail_timeout=900s;  #SPA
+    location / {
+        proxy_ignore_client_abort   on; 
+        proxy_send_timeout          15;
+        proxy_connect_timeout       15;
+        proxy_read_timeout          15;
+        proxy_buffering             on;
+        proxy_buffer_size           32k;
+        proxy_buffers               8 32k;
+        proxy_busy_buffers_size     64k;
+        proxy_next_upstream         http_500 http_502 http_503 http_504 http_404 error timeout invalid_header;
+        proxy_pass                  http://node_appserver;
+        proxy_set_header            Host            $http_host;  
+        proxy_set_header            X-Real-IP       $remote_addr; 
+        proxy_set_header            X-Forwarded-For $proxy_add_x_forwarded_for; 
+        break;
+    }
+}
+
+server {
+    listen       9083 ssl http2; # 开启http2
+    server_name  localhost;
+
+    ssl on;
+
+    ssl_certificate      /data/app/se.vuessr/conf/server/ssl/server.crt;
+    ssl_certificate_key  /data/app/se.vuessr/conf/server/ssl/server.key;
+
+    #ssl_session_cache    shared:SSL:1m;
+    #ssl_session_timeout  5m;
+
+    #ssl_ciphers  HIGH:!aNULL:!MD5;
+    #ssl_prefer_server_ciphers  on;
+
+    root /data/app/se.vuessr/dist;
+
+    location ~* \.(gif|jpg|jpeg|png|bmp|swf|svg|eot|ttf|woff)$ {
+        expires 7d;
+        break;
+    }
+    location ~* \.(css)$ {
+        expires 3d;
+        break;
+    }
+    location ~* \.(js)$ {
+        expires 3d;
+        break;
+    }
+    location = /manifest.json {
+        try_files $uri $uri /vue-ssr-client-manifest.json = 200;
+        break;
+    }
+    location ~* \.(json)$ {
+        expires 15m;
+        break;
     }
 
-    server {
-        listen       9080;
-        server_name  localhost;
+    location / {
+        proxy_ignore_client_abort   on; 
+        proxy_send_timeout          15;
+        proxy_connect_timeout       15;
+        proxy_read_timeout          15;
+        proxy_buffering             on;
+        proxy_buffer_size           32k;
+        proxy_buffers               8 32k;
+        proxy_busy_buffers_size     64k;
+        proxy_next_upstream         http_502 http_504 error timeout invalid_header;
+        proxy_pass                  https://node_appserver_ssl;
+        proxy_set_header            Host            $http_host;  
+        proxy_set_header            X-Real-IP       $remote_addr; 
+        proxy_set_header            X-Forwarded-For $proxy_add_x_forwarded_for; 
+        break;
+    }
+}
 
-        #强制到HTTPS
-        return 301 https://$host:9083$request_uri;
+###############################
+# SPA MODE Server             #
+###############################
 
-        root D:/projects/se.vuessr/dist;
+server {
+    listen       10080;
+    server_name  localhost;
 
-        location ~* \.(gif|jpg|jpeg|png|bmp|swf|svg|eot|ttf|woff)$ {
-            expires 7d;
-            break;
-        }
-        location ~* \.(css)$ {
-            expires 3d;
-            break;
-        }
-        location ~* \.(js)$ {
-            expires 3d;
-            break;
-        }
-        location = /manifest.json {
-            try_files $uri $uri /vue-ssr-client-manifest.json = 200;
-            break;
-        }
-        location ~* \.(json)$ {
-            expires 15m;
-            break;
-        }
+    #强制到HTTPS
+    return 301 https://$host:10443$request_uri;
 
-        location / {
-            proxy_ignore_client_abort   on; 
-            proxy_send_timeout          15;
-            proxy_connect_timeout       15;
-            proxy_read_timeout          15;
-            proxy_buffering             on;
-            proxy_buffer_size           32k;
-            proxy_buffers               8 32k;
-            proxy_busy_buffers_size     64k;
-            proxy_next_upstream         http_500 http_502 http_503 http_504 http_404 error timeout invalid_header;
-            proxy_pass                  http://node_appserver;
-            proxy_set_header            Host            $http_host;  
-            proxy_set_header            X-Real-IP       $remote_addr; 
-            proxy_set_header            X-Forwarded-For $proxy_add_x_forwarded_for; 
-            break;
-        }
+    root /data/app/se.vuessr/dist;
+
+    location ~* \.(gif|jpg|jpeg|png|bmp|swf|svg|eot|ttf|woff)$ {
+        expires 7d;
+        break;
+    }
+    location ~* \.(css)$ {
+        expires 3d;
+        break;
+    }
+    location ~* \.(js)$ {
+        expires 3d;
+        break;
+    }
+    location = /manifest.json {
+        try_files $uri $uri /vue-ssr-client-manifest.json = 200;
+        break;
+    }
+    location ~* \.(json)$ {
+        expires 15m;
+        break;
     }
 
-    server {
-        listen       9083 ssl http2; # 开启http2
-        server_name  localhost;
+    location / {
+        try_files $uri $uri/ /index.html;
+        index  index.html index.htm;
+    }
+}
 
-        ssl on;
+server {
+    listen       10443 ssl http2; # 开启http2
+    server_name  localhost;
 
-        ssl_certificate      D:/projects/se.vuessr/conf/server/ssl/server.crt;
-        ssl_certificate_key  D:/projects/se.vuessr/conf/server/ssl/server.key;
+    ssl on;
 
-        #ssl_session_cache    shared:SSL:1m;
-        #ssl_session_timeout  5m;
+    ssl_certificate      /data/app/se.vuessr/conf/server/ssl/server.crt;
+    ssl_certificate_key  /data/app/se.vuessr/conf/server/ssl/server.key;
 
-        #ssl_ciphers  HIGH:!aNULL:!MD5;
-        #ssl_prefer_server_ciphers  on;
+    #ssl_session_cache    shared:SSL:1m;
+    #ssl_session_timeout  5m;
 
-        root D:/projects/se.vuessr/dist;
+    #ssl_ciphers  HIGH:!aNULL:!MD5;
+    #ssl_prefer_server_ciphers  on;
 
-        location ~* \.(gif|jpg|jpeg|png|bmp|swf|svg|eot|ttf|woff)$ {
-            expires 7d;
-            break;
-        }
-        location ~* \.(css)$ {
-            expires 3d;
-            break;
-        }
-        location ~* \.(js)$ {
-            expires 3d;
-            break;
-        }
-        location = /manifest.json {
-            try_files $uri $uri /vue-ssr-client-manifest.json = 200;
-            break;
-        }
-        location ~* \.(json)$ {
-            expires 15m;
-            break;
-        }
+    root /data/app/se.vuessr/dist;
 
-        location / {
-            proxy_ignore_client_abort   on; 
-            proxy_send_timeout          15;
-            proxy_connect_timeout       15;
-            proxy_read_timeout          15;
-            proxy_buffering             on;
-            proxy_buffer_size           32k;
-            proxy_buffers               8 32k;
-            proxy_busy_buffers_size     64k;
-            proxy_next_upstream         http_502 http_504 error timeout invalid_header;
-            proxy_pass                  https://node_appserver_ssl;
-            proxy_set_header            Host            $http_host;  
-            proxy_set_header            X-Real-IP       $remote_addr; 
-            proxy_set_header            X-Forwarded-For $proxy_add_x_forwarded_for; 
-            break;
-        }
+    location ~* \.(gif|jpg|jpeg|png|bmp|swf|svg|eot|ttf|woff)$ {
+        expires 7d;
+        break;
+    }
+    location ~* \.(css)$ {
+        expires 3d;
+        break;
+    }
+    location ~* \.(js)$ {
+        expires 3d;
+        break;
+    }
+    location = /manifest.json {
+        try_files $uri $uri /vue-ssr-client-manifest.json = 200;
+        break;
+    }
+    location ~* \.(json)$ {
+        expires 15m;
+        break;
     }
 
-    server {
-        listen       10080;
-        server_name  localhost;
-
-        #强制到HTTPS
-        return 301 https://$host:10443$request_uri;
-
-        root D:/projects/se.vuessr/dist;
-
-        location ~* \.(gif|jpg|jpeg|png|bmp|swf|svg|eot|ttf|woff)$ {
-            expires 7d;
-            break;
-        }
-        location ~* \.(css)$ {
-            expires 3d;
-            break;
-        }
-        location ~* \.(js)$ {
-            expires 3d;
-            break;
-        }
-        location = /manifest.json {
-            try_files $uri $uri /vue-ssr-client-manifest.json = 200;
-            break;
-        }
-        location ~* \.(json)$ {
-            expires 15m;
-            break;
-        }
-
-        location / {
-            try_files $uri $uri/ /index.html;
-            index  index.html index.htm;
-        }
+    location / {
+        try_files $uri $uri/ /index.html;
+        index  index.html index.htm;
     }
-
-    server {
-        listen       10443 ssl http2; # 开启http2
-        server_name  localhost;
-
-        ssl on;
-
-        ssl_certificate      D:/projects/se.vuessr/conf/server/ssl/server.crt;
-        ssl_certificate_key  D:/projects/se.vuessr/conf/server/ssl/server.key;
-
-        #ssl_session_cache    shared:SSL:1m;
-        #ssl_session_timeout  5m;
-
-        #ssl_ciphers  HIGH:!aNULL:!MD5;
-        #ssl_prefer_server_ciphers  on;
-
-        root D:/projects/se.vuessr/dist;
-
-        location ~* \.(gif|jpg|jpeg|png|bmp|swf|svg|eot|ttf|woff)$ {
-            expires 7d;
-            break;
-        }
-        location ~* \.(css)$ {
-            expires 3d;
-            break;
-        }
-        location ~* \.(js)$ {
-            expires 3d;
-            break;
-        }
-        location = /manifest.json {
-            try_files $uri $uri /vue-ssr-client-manifest.json = 200;
-            break;
-        }
-        location ~* \.(json)$ {
-            expires 15m;
-            break;
-        }
-
-        location / {
-            try_files $uri $uri/ /index.html;
-            index  index.html index.htm;
-        }
-    }
+}
 ```
