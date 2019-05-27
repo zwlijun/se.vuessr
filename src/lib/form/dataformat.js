@@ -88,6 +88,31 @@ const _public = {
 
         return true;
     },
+    /**
+     * 是否为泰国身份证ID
+     * @param String v 需要校验的值
+     * @return Boolean true/false
+     */
+    "thid": function(data, v, el){
+        var arr = ("" + v).split("");
+        var size = arr.length;
+        var verify = Number(arr[size - 1]);
+
+        var x = 0;
+        for(var i = 0; i < 12; i++){
+            x += (size - i) * Number(arr[i]);
+        }
+
+        x = x % 11;
+
+        if(x <= 1){
+            x = 1 - x;
+        }else{
+            x = 11 - x;
+        }
+
+        return (verify === x);
+    },
     spasswd: function(data, v, el){
         let p = /^[\u0021-\u007E]{6,16}$/;
 
